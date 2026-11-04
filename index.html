@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <title>Missão em Ordem – Programando o Dia a Dia</title>
+  <meta name="description" content="Jogo educativo de programação em blocos para o 2º ano (EF02TPA03).">
+  <meta name="theme-color" content="#86CDF3">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ============ TELA INICIAL ============ -->
+  <section id="home" class="screen active">
+    <div class="home-card">
+      <div class="home-robot" id="homeRobot"></div>
+      <div class="home-text">
+        <h1 class="title">MISSÃO <span>EM ORDEM</span></h1>
+        <p class="subtitle">VAMOS PROGRAMAR AS AÇÕES DO DIA A DIA?</p>
+        <div class="home-buttons">
+          <button class="btn btn-big btn-green" id="btnPlay">▶ JOGAR</button>
+          <button class="btn btn-big btn-blue" id="btnLevels">⭐ ESCOLHER FASE</button>
+          <button class="btn btn-big btn-orange" id="btnHow">❓ COMO JOGAR</button>
+        </div>
+      </div>
+    </div>
+    <div class="mini-demo" aria-hidden="true">
+      <div class="demo-stage" id="demoStage"></div>
+      <p>ARRASTE E <b>ENCAIXE</b> OS BLOCOS!</p>
+    </div>
+    <button class="btn-icon sound-toggle" data-sound title="Som">🔊</button>
+  </section>
+
+  <!-- ============ SELEÇÃO DE FASES ============ -->
+  <section id="levels" class="screen">
+    <header class="bar">
+      <button class="btn btn-small btn-white" data-go="home">🏠 INÍCIO</button>
+      <h2>ESCOLHA A FASE</h2>
+      <div class="star-total" id="starTotal">⭐ 0</div>
+    </header>
+    <div class="level-grid" id="levelGrid"></div>
+  </section>
+
+  <!-- ============ COMO JOGAR ============ -->
+  <section id="howto" class="screen">
+    <header class="bar">
+      <button class="btn btn-small btn-white" data-go="home">🏠 INÍCIO</button>
+      <h2>COMO JOGAR</h2>
+      <span></span>
+    </header>
+    <div class="how-grid">
+      <div class="how-card"><div class="how-num">1</div><div class="how-pic" id="howPic1"></div><p>ARRASTE UM BLOCO COM O DEDO OU O MOUSE.</p></div>
+      <div class="how-card"><div class="how-num">2</div><div class="how-pic" id="howPic2"></div><p>ENCAIXE EMBAIXO DO <b class="c-green">COMEÇAR</b>, NA ORDEM CERTA.</p></div>
+      <div class="how-card"><div class="how-num">3</div><div class="how-pic" id="howPic3"></div><p>TERMINE COM O BLOCO <b class="c-purple">FIM</b>.</p></div>
+      <div class="how-card"><div class="how-num">4</div><div class="how-pic how-run">▶</div><p>APERTE <b class="c-green">EXECUTAR</b> E VEJA O BIPO!</p></div>
+    </div>
+    <div class="how-tips">
+      <p>↩️ ERROU? ARRASTE O BLOCO DE VOLTA PARA O LADO.</p>
+      <p>🔈 TOQUE NUM BLOCO PARA OUVIR O QUE ELE DIZ.</p>
+      <p>⭐⭐⭐ GANHE ATÉ 3 ESTRELAS EM CADA FASE!</p>
+    </div>
+    <div class="center"><button class="btn btn-big btn-green" id="btnHowPlay">▶ VAMOS JOGAR!</button></div>
+  </section>
+
+  <!-- ============ JOGO ============ -->
+  <section id="game" class="screen">
+    <header class="bar game-bar">
+      <button class="btn btn-small btn-white" data-go="levels" title="Fases">☰ FASES</button>
+      <h2><span class="phase-num" id="phaseNum">1</span> <span id="phaseName">FASE</span></h2>
+      <button class="btn-icon" data-sound title="Som">🔊</button>
+    </header>
+
+    <div class="game-main">
+      <!-- Blocos disponíveis -->
+      <div class="panel palette-panel">
+        <div class="panel-title">🧩 BLOCOS</div>
+        <div class="palette" id="palette"></div>
+        <div class="return-hint">↩️ SOLTE AQUI PARA DEVOLVER</div>
+      </div>
+
+      <!-- Área de programação -->
+      <div class="panel ws-panel">
+        <div class="panel-title">🤖 PROGRAMA DO BIPO</div>
+        <div class="workspace" id="workspace"><div class="canvas" id="canvas"></div></div>
+      </div>
+
+      <!-- Palco + controles -->
+      <div class="stage-col">
+        <div class="mission">
+          <button class="btn-icon listen" id="btnListen" title="Ouvir">🔈</button>
+          <p id="goalText">MISSÃO</p>
+        </div>
+        <div class="stage" id="stage">
+          <div class="stage-scene" id="stageScene"></div>
+          <div class="speech" id="speech"></div>
+          <div class="stage-robot" id="stageRobot"></div>
+          <div class="action-pop" id="actionPop"><span class="pop-icon"></span><span class="pop-label"></span></div>
+          <div class="strip" id="strip"></div>
+          <div class="confetti-layer" id="stageConfetti"></div>
+        </div>
+        <div class="controls">
+          <button class="btn btn-big btn-green run-btn" id="btnRun">▶ EXECUTAR</button>
+          <button class="btn btn-mid btn-white" id="btnReset" title="Recomeçar">↺ RECOMEÇAR</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TELA FINAL ============ -->
+  <section id="final" class="screen">
+    <div class="final-card">
+      <div class="final-robot" id="finalRobot"></div>
+      <div class="trophy">🏆</div>
+      <h1 class="title final-title">PARABÉNS, PEQUENO PROGRAMADOR!</h1>
+      <p class="final-msg">VOCÊ APRENDEU A ORGANIZAR AÇÕES, CRIAR SEQUÊNCIAS E PROGRAMAR PASSO A PASSO!</p>
+      <div class="star-total big" id="finalStars">⭐ 0 / 60</div>
+      <div class="home-buttons row">
+        <button class="btn btn-big btn-blue" data-go="levels">⭐ VER FASES</button>
+        <button class="btn btn-big btn-green" data-go="home">🏠 INÍCIO</button>
+      </div>
+    </div>
+    <div class="confetti-layer" id="finalConfetti"></div>
+  </section>
+
+  <!-- ============ JANELA DE VITÓRIA ============ -->
+  <div class="modal" id="winModal" aria-hidden="true">
+    <div class="modal-card">
+      <h2 id="winTitle">MUITO BEM!</h2>
+      <div class="stars" id="winStars"><span>★</span><span>★</span><span>★</span></div>
+      <ul class="criteria" id="winCriteria"></ul>
+      <div class="modal-buttons">
+        <button class="btn btn-mid btn-white" id="btnAgain">↺ DE NOVO</button>
+        <button class="btn btn-mid btn-blue" data-go="levels">☰ FASES</button>
+        <button class="btn btn-big btn-green" id="btnNext">PRÓXIMA ▶</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/levels.js"></script>
+  <script src="js/art.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "name": "Missão em Ordem – Programando o Dia a Dia",
+  "short_name": "Missão em Ordem",
+  "start_url": "./",
+  "display": "fullscreen",
+  "orientation": "any",
+  "background_color": "#EAF6FF",
+  "theme_color": "#86CDF3",
+  "lang": "pt-BR",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}
