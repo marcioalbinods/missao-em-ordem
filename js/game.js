@@ -601,6 +601,46 @@
     speak('Parabéns, pequeno programador! Você aprendeu a organizar ações, criar sequências e programar passo a passo!');
   }
 
+  // ---------- Área do professor: zerar o progresso para uma nova turma ----------
+  let teacherAnswer = 0;
+  function openTeacher() {
+    const a = 3 + Math.floor(Math.random() * 7), b = 3 + Math.floor(Math.random() * 7); // 3..9
+    teacherAnswer = a * b;
+    $('#teacherQ').textContent = `${a} × ${b}`;
+    $('#teacherAnswer').value = '';
+    $('#teacherError').textContent = '';
+    $('#teacherAsk').hidden = false;
+    $('#teacherDone').hidden = true;
+    $('#teacherModal').classList.add('show');
+    $('#teacherModal').setAttribute('aria-hidden', 'false');
+    setTimeout(() => $('#teacherAnswer').focus(), 50);
+  }
+  function closeTeacher() {
+    $('#teacherModal').classList.remove('show');
+    $('#teacherModal').setAttribute('aria-hidden', 'true');
+  }
+  function resetProgress() {
+    if (Number($('#teacherAnswer').value) !== teacherAnswer) {
+      $('#teacherError').textContent = 'Resposta errada. Tente de novo.';
+      $('#teacherAnswer').select();
+      SFX.back();
+      return;
+    }
+    progress.stars = {}; // mantém só a preferência de som
+    save();
+    G = null;
+    renderLevelGrid();
+    $('#teacherAsk').hidden = true;
+    $('#teacherDone').hidden = false;
+    $('#btnTeacherOk').focus();
+  }
+  $('#btnTeacher').addEventListener('click', openTeacher);
+  $('#btnTeacherCancel').addEventListener('click', closeTeacher);
+  $('#btnTeacherOk').addEventListener('click', () => { closeTeacher(); show('home'); });
+  $('#btnTeacherReset').addEventListener('click', resetProgress);
+  $('#teacherAnswer').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); resetProgress(); } });
+  $('#teacherModal').addEventListener('click', (e) => { if (e.target.id === 'teacherModal' && !$('#teacherAsk').hidden) closeTeacher(); });
+
   $('#btnRun').addEventListener('click', run);
   $('#btnReset').addEventListener('click', () => {
     if (!G || G.running) return;

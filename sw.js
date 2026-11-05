@@ -1,5 +1,5 @@
 // Guarda os arquivos do jogo para funcionar sem internet depois do primeiro acesso.
-const CACHE = 'missao-em-ordem-v1';
+const CACHE = 'missao-em-ordem-v2';
 const FILES = [
   './', 'index.html', 'css/style.css', 'js/levels.js', 'js/art.js', 'js/game.js',
   'fonts/Fredoka.ttf', 'icon.svg', 'manifest.webmanifest'
