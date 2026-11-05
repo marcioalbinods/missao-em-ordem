@@ -45,3 +45,5 @@ fonts/Fredoka.ttf   fonte arredondada (SIL Open Font License)
 ```
 
 Para criar ou mudar uma fase, edite apenas `js/levels.js`: um único sistema de jogo lê todas as fases.
+
+**Ao publicar uma mudança** em arquivos de `css/` ou `js/`, aumente o número `?v=` nos links do `index.html` e em `sw.js` (e o nome do `CACHE` em `sw.js`). Assim os navegadores baixam os arquivos novos em vez de usar os antigos guardados.
