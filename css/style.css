@@ -68,6 +68,17 @@ button { font-family: inherit; }
 }
 .btn-icon:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0, 0, 0, .12); }
 .sound-toggle { position: absolute; top: 16px; right: 16px; }
+.btn-red { background: var(--red); }
+.teacher-btn { position: absolute; top: 18px; left: 16px; font-size: 14px; min-height: 40px; padding: 8px 14px; opacity: .85; }
+
+/* ---------- Área do professor ---------- */
+.modal-card.teacher-card h2 { color: var(--blue-d); font-size: 28px; }
+.teacher-text { font-size: 17px; line-height: 1.45; margin: 10px 0 16px; }
+.teacher-text small { color: var(--ink-soft); }
+.teacher-label { display: block; font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+.teacher-input { font: inherit; font-size: 24px; width: 120px; text-align: center; padding: 8px; border: 3px solid var(--line); border-radius: 14px; color: var(--ink); }
+.teacher-input:focus { outline: none; border-color: var(--blue); }
+.teacher-error { min-height: 22px; margin: 8px 0 12px; color: var(--red); font-weight: 600; }
 
 /* ---------- Barra superior ---------- */
 .bar {

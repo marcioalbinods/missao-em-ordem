@@ -31,6 +31,7 @@
       <p>ARRASTE E <b>ENCAIXE</b> OS BLOCOS!</p>
     </div>
     <button class="btn-icon sound-toggle" data-sound title="Som">🔊</button>
+    <button class="btn btn-small btn-white teacher-btn" id="btnTeacher" title="Área do professor">👩‍🏫 PROFESSOR</button>
   </section>
 
   <!-- ============ SELEÇÃO DE FASES ============ -->
@@ -134,6 +135,29 @@
         <button class="btn btn-mid btn-white" id="btnAgain">↺ DE NOVO</button>
         <button class="btn btn-mid btn-blue" data-go="levels">☰ FASES</button>
         <button class="btn btn-big btn-green" id="btnNext">PRÓXIMA ▶</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ ÁREA DO PROFESSOR ============ -->
+  <div class="modal" id="teacherModal" aria-hidden="true" role="dialog" aria-labelledby="teacherTitle">
+    <div class="modal-card teacher-card">
+      <h2 id="teacherTitle">👩‍🏫 ÁREA DO PROFESSOR</h2>
+      <div id="teacherAsk">
+        <p class="teacher-text">Zerar o progresso apaga todas as estrelas e fecha as fases de novo, para uma nova turma começar do início.<br><small>Vale só para este computador ou tablet.</small></p>
+        <label class="teacher-label" for="teacherAnswer">Para confirmar, quanto é <b id="teacherQ">6 × 7</b>?</label>
+        <input class="teacher-input" id="teacherAnswer" type="number" inputmode="numeric" autocomplete="off">
+        <p class="teacher-error" id="teacherError" aria-live="polite"></p>
+        <div class="modal-buttons">
+          <button class="btn btn-mid btn-white" id="btnTeacherCancel">CANCELAR</button>
+          <button class="btn btn-mid btn-red" id="btnTeacherReset">🗑 ZERAR PROGRESSO</button>
+        </div>
+      </div>
+      <div id="teacherDone" hidden>
+        <p class="teacher-text">✅ Progresso zerado! O jogo está pronto para a próxima turma.</p>
+        <div class="modal-buttons">
+          <button class="btn btn-mid btn-green" id="btnTeacherOk">OK</button>
+        </div>
       </div>
     </div>
   </div>
