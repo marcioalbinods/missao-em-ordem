@@ -19,12 +19,13 @@
 
   // ---------- Progresso salvo no navegador ----------
   const STORE = 'missao-em-ordem-v1';
-  let progress = { stars: {}, sound: true };
+  let progress = { stars: {}, sound: true, unlocked: false };
   try { Object.assign(progress, JSON.parse(localStorage.getItem(STORE)) || {}); } catch (e) { /* sem armazenamento */ }
   const save = () => { try { localStorage.setItem(STORE, JSON.stringify(progress)); } catch (e) { /* ignora */ } };
   const starsOf = (i) => progress.stars[i + 1] || 0;           // i = índice 0..19
   const isDone = (i) => starsOf(i) > 0;
-  const isOpen = (i) => i === 0 || isDone(i - 1) || isDone(i);
+  const isNormallyOpen = (i) => i === 0 || isDone(i - 1) || isDone(i);
+  const isOpen = (i) => progress.unlocked || isNormallyOpen(i);
   const totalStars = () => LEVELS.reduce((s, _, i) => s + starsOf(i), 0);
 
   // ---------- Som e voz (sem arquivos, sem internet) ----------
@@ -144,14 +145,17 @@
   function renderLevelGrid() {
     const grid = $('#levelGrid'); grid.innerHTML = '';
     $('#starTotal').textContent = `⭐ ${totalStars()} / ${LEVELS.length * 3}`;
+    $('#unlockNote').hidden = !progress.unlocked;
     LEVELS.forEach((lv, i) => {
       const card = document.createElement('button');
       const open = isOpen(i), done = isDone(i);
-      card.className = 'level-card ' + (done ? 'done' : open ? 'available' : 'locked');
+      const byTeacher = open && !done && !isNormallyOpen(i); // aberta só pelo professor: sem piscar
+      card.className = 'level-card ' + (done ? 'done' : byTeacher ? 'unlocked' : open ? 'available' : 'locked');
       const st = starsOf(i);
       const state = done
         ? `<div class="lv-state">${[0, 1, 2].map((k) => `<span class="${k < st ? 'on' : 'off'}">★</span>`).join('')}</div>`
-        : open ? '<span class="lv-tag">JOGAR!</span>' : '<div class="lv-state">🔒</div>';
+        : byTeacher ? '<span class="lv-tag lv-tag-teacher">🔓 ABRIR</span>'
+          : open ? '<span class="lv-tag">JOGAR!</span>' : '<div class="lv-state">🔒</div>';
       card.innerHTML = `<span class="lv-num">${i + 1}</span>
         <span class="lv-pic" style="background:${PIC_BG[i % PIC_BG.length]}">${lv.icon}</span>
         <span class="lv-name">${lv.name}</span>${state}`;
@@ -601,14 +605,21 @@
     speak('Parabéns, pequeno programador! Você aprendeu a organizar ações, criar sequências e programar passo a passo!');
   }
 
-  // ---------- Área do professor: zerar o progresso para uma nova turma ----------
-  let teacherAnswer = 0;
+  // ---------- Área do professor: liberar todas as fases ou zerar o progresso ----------
+  let teacherAnswer = 0, afterTeacher = 'home';
+  function refreshUnlockButton() {
+    $('#btnTeacherUnlock').textContent = progress.unlocked ? '🔒 BLOQUEAR AS FASES DE NOVO' : '🔓 LIBERAR TODAS AS FASES';
+    $('#teacherUnlockText').textContent = progress.unlocked
+      ? 'Volta ao normal: cada fase abre quando a anterior é vencida. As estrelas não mudam.'
+      : `Abre as ${LEVELS.length} fases para mostrar qualquer uma à turma. As estrelas não mudam.`;
+  }
   function openTeacher() {
     const a = 3 + Math.floor(Math.random() * 7), b = 3 + Math.floor(Math.random() * 7); // 3..9
     teacherAnswer = a * b;
     $('#teacherQ').textContent = `${a} × ${b}`;
     $('#teacherAnswer').value = '';
     $('#teacherError').textContent = '';
+    refreshUnlockButton();
     $('#teacherAsk').hidden = false;
     $('#teacherDone').hidden = true;
     $('#teacherModal').classList.add('show');
@@ -619,26 +630,43 @@
     $('#teacherModal').classList.remove('show');
     $('#teacherModal').setAttribute('aria-hidden', 'true');
   }
-  function resetProgress() {
-    if (Number($('#teacherAnswer').value) !== teacherAnswer) {
-      $('#teacherError').textContent = 'Resposta errada. Tente de novo.';
-      $('#teacherAnswer').select();
-      SFX.back();
-      return;
-    }
-    progress.stars = {}; // mantém só a preferência de som
+  function answerOk() {
+    if (Number($('#teacherAnswer').value) === teacherAnswer) return true;
+    $('#teacherError').textContent = 'Resposta errada. Tente de novo.';
+    $('#teacherAnswer').focus();
+    $('#teacherAnswer').select();
+    SFX.back();
+    return false;
+  }
+  function teacherDone(text, next) {
     save();
-    G = null;
     renderLevelGrid();
+    afterTeacher = next;
+    $('#teacherDoneText').textContent = text;
     $('#teacherAsk').hidden = true;
     $('#teacherDone').hidden = false;
     $('#btnTeacherOk').focus();
   }
+  function toggleUnlock() {
+    if (!answerOk()) return;
+    progress.unlocked = !progress.unlocked;
+    if (progress.unlocked) teacherDone('✅ Todas as fases estão liberadas! Escolha a fase que quer mostrar.', 'levels');
+    else teacherDone('✅ Fases bloqueadas de novo. Cada fase abre quando a anterior é vencida.', 'home');
+  }
+  function resetProgress() {
+    if (!answerOk()) return;
+    progress.stars = {}; // mantém só a preferência de som
+    progress.unlocked = false;
+    G = null;
+    teacherDone('✅ Progresso zerado! O jogo está pronto para a próxima turma.', 'home');
+  }
   $('#btnTeacher').addEventListener('click', openTeacher);
   $('#btnTeacherCancel').addEventListener('click', closeTeacher);
-  $('#btnTeacherOk').addEventListener('click', () => { closeTeacher(); show('home'); });
+  $('#btnTeacherOk').addEventListener('click', () => { closeTeacher(); show(afterTeacher); });
+  $('#btnTeacherUnlock').addEventListener('click', toggleUnlock);
   $('#btnTeacherReset').addEventListener('click', resetProgress);
-  $('#teacherAnswer').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); resetProgress(); } });
+  // Enter não escolhe nenhuma opção sozinho: o professor clica na que quer.
+  $('#teacherAnswer').addEventListener('keydown', (e) => { if (e.key === 'Enter') e.preventDefault(); });
   $('#teacherModal').addEventListener('click', (e) => { if (e.target.id === 'teacherModal' && !$('#teacherAsk').hidden) closeTeacher(); });
 
   $('#btnRun').addEventListener('click', run);
