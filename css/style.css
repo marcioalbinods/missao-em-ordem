@@ -78,6 +78,15 @@ button { font-family: inherit; }
 .teacher-label { display: block; font-size: 18px; font-weight: 600; margin-bottom: 8px; }
 .teacher-input { font: inherit; font-size: 24px; width: 120px; text-align: center; padding: 8px; border: 3px solid var(--line); border-radius: 14px; color: var(--ink); }
 .teacher-input:focus { outline: none; border-color: var(--blue); }
+.teacher-options { display: flex; flex-direction: column; gap: 12px; margin: 4px 0 6px; text-align: left; }
+.teacher-option { display: flex; align-items: center; gap: 14px; background: var(--bg); border-radius: 18px; padding: 10px 12px; }
+.teacher-option .btn { flex: 0 0 270px; font-size: 16px; }
+.teacher-option p { margin: 0; font-size: 15px; line-height: 1.35; color: var(--ink-soft); }
+@media (max-width: 640px) { .teacher-option { flex-direction: column; text-align: center; } .teacher-option .btn { flex-basis: auto; width: 100%; } }
+.level-card.unlocked { outline: 3px dashed #E0B000; }
+.lv-tag.lv-tag-teacher { background: #E0B000; }
+.unlock-note { margin: 14px auto 0; background: #FFF3CC; color: #7A5600; border-radius: 999px; padding: 8px 18px; font-weight: 700; font-size: 15px; text-align: center; }
+.unlock-note[hidden] { display: none; }
 .teacher-error { min-height: 22px; margin: 8px 0 12px; color: var(--red); font-weight: 600; }
 
 /* ---------- Barra superior ---------- */

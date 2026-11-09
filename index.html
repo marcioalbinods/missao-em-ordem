@@ -8,7 +8,7 @@
   <meta name="theme-color" content="#86CDF3">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="css/style.css?v=4">
+  <link rel="stylesheet" href="css/style.css?v=5">
 </head>
 <body>
 
@@ -41,6 +41,7 @@
       <h2>ESCOLHA A FASE</h2>
       <div class="star-total" id="starTotal">⭐ 0</div>
     </header>
+    <p class="unlock-note" id="unlockNote" hidden>🔓 MODO PROFESSOR: TODAS AS FASES ESTÃO LIBERADAS</p>
     <div class="level-grid" id="levelGrid"></div>
   </section>
 
@@ -144,17 +145,26 @@
     <div class="modal-card teacher-card">
       <h2 id="teacherTitle">👩‍🏫 ÁREA DO PROFESSOR</h2>
       <div id="teacherAsk">
-        <p class="teacher-text">Zerar o progresso apaga todas as estrelas e fecha as fases de novo, para uma nova turma começar do início.<br><small>Vale só para este computador ou tablet.</small></p>
-        <label class="teacher-label" for="teacherAnswer">Para confirmar, quanto é <b id="teacherQ">6 × 7</b>?</label>
+        <label class="teacher-label" for="teacherAnswer">Para entrar, quanto é <b id="teacherQ">6 × 7</b>?</label>
         <input class="teacher-input" id="teacherAnswer" type="number" inputmode="numeric" autocomplete="off">
         <p class="teacher-error" id="teacherError" aria-live="polite"></p>
+        <div class="teacher-options">
+          <div class="teacher-option">
+            <button class="btn btn-mid btn-blue" id="btnTeacherUnlock">🔓 LIBERAR TODAS AS FASES</button>
+            <p id="teacherUnlockText">Abre as 40 fases para mostrar qualquer uma à turma. As estrelas não mudam.</p>
+          </div>
+          <div class="teacher-option">
+            <button class="btn btn-mid btn-red" id="btnTeacherReset">🗑 ZERAR PROGRESSO</button>
+            <p>Apaga todas as estrelas e fecha as fases de novo, para uma nova turma começar do início.</p>
+          </div>
+        </div>
+        <p class="teacher-text"><small>Vale só para este computador ou tablet.</small></p>
         <div class="modal-buttons">
           <button class="btn btn-mid btn-white" id="btnTeacherCancel">CANCELAR</button>
-          <button class="btn btn-mid btn-red" id="btnTeacherReset">🗑 ZERAR PROGRESSO</button>
         </div>
       </div>
       <div id="teacherDone" hidden>
-        <p class="teacher-text">✅ Progresso zerado! O jogo está pronto para a próxima turma.</p>
+        <p class="teacher-text" id="teacherDoneText">✅ Pronto!</p>
         <div class="modal-buttons">
           <button class="btn btn-mid btn-green" id="btnTeacherOk">OK</button>
         </div>
@@ -162,8 +172,8 @@
     </div>
   </div>
 
-  <script src="js/levels.js?v=4"></script>
-  <script src="js/art.js?v=4"></script>
-  <script src="js/game.js?v=4"></script>
+  <script src="js/levels.js?v=5"></script>
+  <script src="js/art.js?v=5"></script>
+  <script src="js/game.js?v=5"></script>
 </body>
 </html>

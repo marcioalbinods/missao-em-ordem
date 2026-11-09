@@ -27,7 +27,10 @@ Errou? O jogo mostra o bloco que precisa ser revisto e dá uma dica. É só reor
 - **Som e voz**: toque em um bloco para ouvir o que ele diz (útil para quem está aprendendo a ler).
 - Funciona com **mouse e toque** (computador, notebook e tablet).
 - Funciona **offline** depois do primeiro acesso.
-- **Área do professor**: botão **👩‍🏫 PROFESSOR** na tela inicial para **zerar o progresso** (estrelas e fases liberadas) e deixar o jogo pronto para outra turma. Para evitar que uma criança apague sem querer, é preciso responder uma conta de multiplicação. O progresso fica salvo em cada aparelho, então é preciso zerar em cada computador ou tablet.
+- **Área do professor**: botão **👩‍🏫 PROFESSOR** na tela inicial, protegido por uma conta de multiplicação para as crianças não mexerem sem querer. Tem duas opções:
+  - **🔓 Liberar todas as fases**: abre as 40 fases para o professor mostrar qualquer uma à turma, sem mudar as estrelas. No mesmo botão dá para **bloquear de novo** e voltar ao normal.
+  - **🗑 Zerar progresso**: apaga as estrelas e fecha as fases, para outra turma começar do início.
+  O progresso fica salvo em cada aparelho, então é preciso fazer isso em cada computador ou tablet.
 
 ## Como abrir
 
