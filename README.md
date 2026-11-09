@@ -47,3 +47,30 @@ fonts/Fredoka.ttf   fonte arredondada (SIL Open Font License)
 Para criar ou mudar uma fase, edite apenas `js/levels.js`: um único sistema de jogo lê todas as fases.
 
 **Ao publicar uma mudança** em arquivos de `css/` ou `js/`, aumente o número `?v=` nos links do `index.html` e em `sw.js` (e o nome do `CACHE` em `sw.js`). Assim os navegadores baixam os arquivos novos em vez de usar os antigos guardados.
+
+---
+
+# 🌟 Missão Sabre de Luz (pasta `star-wars/`)
+
+Segundo jogo do repositório: **programação com setas** no estilo ScratchJr, pensado para um aluno do **5º ano da educação especial**. Tema: guerra nas estrelas.
+
+**Como jogar**
+
+1. Escolha o personagem: **Yoda** (sabre verde), **Darth Vader** (sabre vermelho) ou **Obi-Wan** (sabre azul).
+2. Toque nas **setas** (← ↑ ↓ →) para montar o caminho no labirinto. Cada seta vira um bloco no programa.
+3. Aperte **▶ JOGAR** e veja o personagem andar, passo a passo, até o **sabre de luz**.
+
+**Recursos de acessibilidade**
+
+- **10 fases fáceis**, do caminho de 2 passos até um labirinto de 12 passos.
+- Botões grandes, só toque (não precisa arrastar). Também funciona com as setas do teclado e Enter.
+- **Voz em português** lê as instruções e o nome de cada seta (botão 🔊 liga/desliga).
+- Errou? O bloco que bateu na parede fica **vermelho** e o jogo explica o que fazer. Sem tempo, sem perder vidas.
+- Botão **💡 Dica** mostra o caminho com bolinhas amarelas e setas.
+- Toque em um bloco do programa (✕) para tirar; **⌫ Voltar** apaga a última seta; **🗑 Limpar** apaga tudo.
+- Estrelas: 3 ⭐ acertando de primeira sem dica, 2 ⭐ nos outros casos (sempre positivo).
+- **Área do professor** (link na tela inicial, protegida por uma conta de multiplicação): liberar todas as fases ou zerar o progresso.
+
+**Como abrir:** com o GitHub Pages ligado, acesse `.../star-wars/`. No computador, abra `star-wars/index.html` no navegador. É um arquivo único, sem instalação.
+
+> Projeto educativo, sem fins comerciais. Os personagens são desenhos simples feitos para o jogo.

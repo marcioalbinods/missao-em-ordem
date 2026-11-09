@@ -1,0 +1,737 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Missão Sabre de Luz</title>
+<meta name="description" content="Jogo de programação com setas (estilo ScratchJr) com tema de guerra nas estrelas: ajude Yoda, Darth Vader ou Obi-Wan a pegar o sabre de luz.">
+<meta name="theme-color" content="#0b1026">
+<style>
+@font-face { font-family: 'Fredoka'; src: url('../fonts/Fredoka.ttf') format('truetype'); font-display: swap; }
+:root {
+  --bg: #0b1026; --bg2: #141c44; --panel: #1d2659; --panel2: #263275;
+  --text: #ffffff; --muted: #c7cdf5; --yellow: #ffd23f; --green: #3ccf6e; --green-d: #23a453;
+  --blue: #3d8bfd; --blue-d: #1f63cc; --red: #ff5a5a; --orange: #ff9f1c;
+  --floor: #2a3a7a; --floor2: #31438a; --wall: #8a93ad; --wall-d: #5d6684;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; height: 100%; }
+body {
+  font-family: 'Fredoka', 'Comic Sans MS', system-ui, sans-serif; color: var(--text);
+  background: var(--bg) radial-gradient(ellipse at 50% 0%, #1f2a66 0%, var(--bg) 70%) fixed;
+  overflow-x: hidden; user-select: none; -webkit-user-select: none; touch-action: manipulation;
+}
+#stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+#stars i { position: absolute; width: 2px; height: 2px; background: #fff; border-radius: 50%; opacity: .7; animation: twinkle 3s infinite ease-in-out; }
+@keyframes twinkle { 50% { opacity: .15; } }
+button { font-family: inherit; cursor: pointer; border: 0; color: inherit; }
+button:focus-visible { outline: 4px solid var(--yellow); outline-offset: 3px; }
+.screen { position: relative; z-index: 1; display: none; min-height: 100vh; padding: 16px; }
+.screen.on { display: flex; flex-direction: column; align-items: center; }
+
+/* ---------- Tela inicial ---------- */
+.title { text-align: center; margin: 12px 0 4px; }
+.title h1 { margin: 0; font-size: clamp(34px, 7vw, 64px); color: var(--yellow); letter-spacing: 2px; text-shadow: 0 0 18px rgba(255,210,63,.5), 0 4px 0 #b8860b; }
+.title p { margin: 6px 0 0; font-size: clamp(18px, 3vw, 26px); color: var(--muted); }
+.pick-title { font-size: clamp(22px, 4vw, 32px); margin: 22px 0 12px; text-align: center; }
+.chars { display: flex; gap: 18px; flex-wrap: wrap; justify-content: center; width: 100%; max-width: 900px; }
+.char-btn {
+  flex: 1 1 220px; max-width: 270px; background: var(--panel); border-radius: 24px; padding: 14px 12px 16px;
+  border: 5px solid transparent; box-shadow: 0 8px 0 #0a0f2e; transition: transform .15s;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+}
+.char-btn:hover { transform: translateY(-4px); }
+.char-btn:active { transform: translateY(3px); box-shadow: 0 4px 0 #0a0f2e; }
+.char-btn.sel { border-color: var(--yellow); background: var(--panel2); }
+.char-btn svg { width: 150px; height: 150px; }
+.char-btn .nm { font-size: 28px; }
+.char-btn .sb { display: flex; align-items: center; gap: 6px; font-size: 18px; color: var(--muted); }
+.char-btn .sb svg { width: 40px; height: 40px; }
+.big-btn {
+  font-size: clamp(24px, 4vw, 34px); padding: 16px 40px; border-radius: 22px; background: var(--green);
+  box-shadow: 0 8px 0 var(--green-d); margin-top: 26px; color: #0b2a14; font-weight: 600;
+}
+.big-btn:active { transform: translateY(5px); box-shadow: 0 3px 0 var(--green-d); }
+.small-link { margin-top: 26px; background: transparent; color: var(--muted); font-size: 18px; text-decoration: underline; }
+
+/* ---------- Fases ---------- */
+.topbar { width: 100%; max-width: 1200px; display: flex; align-items: center; gap: 12px; }
+.topbar h2 { flex: 1; margin: 0; text-align: center; font-size: clamp(22px, 4vw, 34px); color: var(--yellow); }
+.icon-btn {
+  width: 64px; height: 64px; border-radius: 18px; background: var(--panel2); font-size: 32px;
+  box-shadow: 0 5px 0 #0a0f2e; display: grid; place-items: center; flex: none;
+}
+.icon-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 #0a0f2e; }
+.levels { display: grid; grid-template-columns: repeat(5, minmax(90px, 150px)); gap: 18px; margin-top: 30px; }
+@media (max-width: 620px) { .levels { grid-template-columns: repeat(3, minmax(90px, 1fr)); } }
+.lvl {
+  aspect-ratio: 1; border-radius: 50%; font-size: clamp(32px, 6vw, 48px); font-weight: 600;
+  background: radial-gradient(circle at 35% 30%, #7fb2ff, #3d6ee0 55%, #213e94);
+  box-shadow: 0 8px 0 #0a0f2e, 0 0 20px rgba(61,139,253,.4); display: flex; flex-direction: column;
+  align-items: center; justify-content: center; position: relative;
+}
+.lvl:nth-child(3n+2) { background: radial-gradient(circle at 35% 30%, #ffc48a, #e07a3d 55%, #94431f); box-shadow: 0 8px 0 #0a0f2e, 0 0 20px rgba(224,122,61,.4); }
+.lvl:nth-child(3n+3) { background: radial-gradient(circle at 35% 30%, #a8f0a0, #3daa52 55%, #1f6b2e); box-shadow: 0 8px 0 #0a0f2e, 0 0 20px rgba(61,170,82,.4); }
+.lvl .st { font-size: 18px; letter-spacing: 1px; position: absolute; bottom: -30px; color: var(--yellow); }
+.lvl.locked { filter: grayscale(1) brightness(.5); cursor: not-allowed; }
+.lvl:not(.locked):active { transform: translateY(4px); }
+
+/* ---------- Jogo ---------- */
+#game.on { padding: 10px 12px 16px; }
+.play { width: 100%; max-width: 1250px; display: flex; flex-wrap: wrap; gap: 16px; margin-top: 10px; align-items: flex-start; }
+.board-wrap { flex: 1 1 420px; background: var(--panel); border-radius: 24px; padding: 14px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.mission { font-size: clamp(18px, 2.6vw, 24px); text-align: center; color: var(--muted); min-height: 1.3em; }
+.mission b { color: var(--yellow); }
+.board { position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 0 0 6px #0a0f2e; }
+.cell { position: absolute; display: grid; place-items: center; }
+.cell.floor { background: var(--floor); box-shadow: inset 0 0 0 1px #22306a; }
+.cell.floor.alt { background: var(--floor2); }
+.cell.wall svg, .cell.goal svg { width: 100%; height: 100%; }
+.cell.goal .sab { width: 80%; height: 80%; animation: glow 1.4s infinite ease-in-out; }
+@keyframes glow { 50% { transform: scale(1.12) rotate(-6deg); } }
+.cell.start-mark::after { content: ''; position: absolute; inset: 22%; border-radius: 50%; border: 3px dashed rgba(255,255,255,.35); }
+.foot { position: absolute; display: grid; place-items: center; pointer-events: none; animation: pop .3s backwards; }
+.foot span { width: 46%; height: 46%; border-radius: 50%; background: var(--yellow); box-shadow: 0 0 14px var(--yellow); display: grid; place-items: center; }
+.foot svg { width: 75%; height: 75%; }
+@keyframes pop { from { transform: scale(0); } }
+.hero { position: absolute; left: 0; top: 0; transition: transform .45s ease-in-out; z-index: 3; pointer-events: none; }
+.hero .inner { width: 100%; height: 100%; transition: transform .2s; }
+.hero .inner.flip { transform: scaleX(-1); }
+.hero svg { width: 100%; height: 100%; display: block; }
+.hero .held { position: absolute; right: -18%; top: 10%; width: 60%; height: 60%; display: none; }
+.hero.won .held { display: block; animation: glow 1s infinite; }
+.hero.bump .inner { animation: shake .4s; }
+@keyframes shake { 20%,60% { transform: translateX(-8%); } 40%,80% { transform: translateX(8%); } }
+.hero.won .inner { animation: jump .6s 3; }
+@keyframes jump { 50% { transform: translateY(-20%); } }
+
+.code-wrap { flex: 1 1 380px; display: flex; flex-direction: column; gap: 14px; }
+.panel { background: var(--panel); border-radius: 24px; padding: 14px; }
+.panel h3 { margin: 0 0 10px; font-size: 22px; color: var(--muted); font-weight: 500; }
+.palette { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.blk {
+  position: relative; background: var(--blue); border-radius: 14px; box-shadow: 0 6px 0 var(--blue-d);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px 4px 6px;
+}
+.blk svg { width: 58px; height: 58px; }
+.blk small { font-size: 15px; font-weight: 600; letter-spacing: .5px; }
+.palette .blk { min-height: 104px; }
+.palette .blk:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--blue-d); }
+.palette .blk::after, .prog .blk::after, .prog .flag::after {
+  content: ''; position: absolute; right: -9px; top: 50%; width: 18px; height: 18px; margin-top: -9px;
+  border-radius: 50%; background: inherit; z-index: 1;
+}
+.prog { display: flex; flex-wrap: wrap; gap: 14px 12px; min-height: 96px; align-items: center; padding: 6px 2px; }
+.prog .flag { position: relative; width: 74px; height: 80px; border-radius: 14px; background: var(--green); box-shadow: 0 6px 0 var(--green-d); display: grid; place-items: center; font-size: 38px; }
+.prog .blk { width: 74px; height: 80px; padding: 4px; animation: pop .2s; }
+.prog .blk svg { width: 46px; height: 46px; }
+.prog .blk small { font-size: 11px; }
+.prog .blk .x { position: absolute; top: -10px; left: -8px; width: 26px; height: 26px; border-radius: 50%; background: #fff; color: var(--red); font-size: 17px; line-height: 26px; text-align: center; font-weight: 700; z-index: 2; box-shadow: 0 2px 4px rgba(0,0,0,.4); }
+.prog .blk.now { background: var(--yellow); box-shadow: 0 6px 0 #c99a00, 0 0 18px var(--yellow); transform: scale(1.08); }
+.prog .blk.now svg path { fill: #3a2a00; }
+.prog .blk.bad { background: var(--red); box-shadow: 0 6px 0 #b83232, 0 0 18px var(--red); }
+.prog .empty { color: var(--muted); font-size: 19px; border: 3px dashed #4b5aa8; border-radius: 14px; padding: 18px 16px; }
+.count { float: right; font-size: 18px; color: var(--muted); }
+.actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.act { flex: 1 1 120px; font-size: 24px; padding: 16px 10px; border-radius: 18px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.act:active { transform: translateY(4px); }
+.act.go { flex: 2 1 220px; background: var(--green); color: #0b2a14; box-shadow: 0 6px 0 var(--green-d); font-size: 30px; }
+.act.undo { background: var(--orange); color: #3a1f00; box-shadow: 0 6px 0 #c06d00; }
+.act.clear { background: #ff7b7b; color: #3a0000; box-shadow: 0 6px 0 #c04545; }
+.act.hint { background: var(--yellow); color: #3a2a00; box-shadow: 0 6px 0 #c99a00; }
+.act:disabled { opacity: .45; cursor: default; }
+.msg { min-height: 64px; display: flex; align-items: center; gap: 12px; font-size: clamp(19px, 2.5vw, 24px); background: var(--panel2); border-radius: 18px; padding: 10px 16px; }
+.msg .ic { font-size: 34px; }
+
+/* ---------- Janelas ---------- */
+.modal { position: fixed; inset: 0; background: rgba(5,8,25,.82); z-index: 50; display: none; align-items: center; justify-content: center; padding: 16px; }
+.modal.on { display: flex; }
+.card { background: var(--panel); border-radius: 28px; padding: 24px; text-align: center; max-width: 520px; width: 100%; box-shadow: 0 0 0 5px var(--yellow), 0 20px 50px rgba(0,0,0,.6); animation: pop .35s; }
+.card h2 { margin: 0 0 6px; font-size: clamp(28px, 5vw, 40px); color: var(--yellow); }
+.card p { font-size: 22px; margin: 8px 0; color: var(--muted); }
+.card .bigstars { font-size: 60px; letter-spacing: 6px; }
+.card .bigstars .off { filter: grayscale(1) brightness(.4); }
+.card .pic { width: 170px; height: 170px; margin: 0 auto; position: relative; }
+.card .pic svg { width: 100%; height: 100%; }
+.card .pic .held { position: absolute; right: -30px; top: 10px; width: 100px; height: 100px; }
+.card .row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+.card .row button { font-size: 22px; padding: 14px 22px; border-radius: 18px; font-weight: 600; background: var(--panel2); box-shadow: 0 5px 0 #0a0f2e; }
+.card .row button.main { background: var(--green); color: #0b2a14; box-shadow: 0 5px 0 var(--green-d); font-size: 26px; }
+.card input { font-family: inherit; font-size: 28px; width: 140px; text-align: center; padding: 8px; border-radius: 12px; border: 3px solid var(--blue); }
+.confetti { position: fixed; top: -40px; z-index: 60; font-size: 30px; pointer-events: none; animation: fall linear forwards; }
+@keyframes fall { to { transform: translateY(110vh) rotate(540deg); } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
+}
+</style>
+</head>
+<body>
+<div id="stars"></div>
+
+<!-- Tela 1: escolher personagem -->
+<section class="screen on" id="home">
+  <div class="title">
+    <h1>MISSÃO SABRE DE LUZ</h1>
+    <p>Programe com as setas e pegue o sabre de luz!</p>
+  </div>
+  <div class="pick-title">Escolha seu personagem:</div>
+  <div class="chars" id="chars"></div>
+  <button class="big-btn" id="btnStart">▶ COMEÇAR</button>
+  <button class="small-link" id="btnTeacher">👩‍🏫 Área do professor</button>
+</section>
+
+<!-- Tela 2: escolher fase -->
+<section class="screen" id="map">
+  <div class="topbar">
+    <button class="icon-btn" id="mapBack" aria-label="Voltar">🏠</button>
+    <h2>Escolha a fase</h2>
+    <div class="icon-btn" id="mapHero" aria-hidden="true"></div>
+  </div>
+  <div class="levels" id="levels"></div>
+</section>
+
+<!-- Tela 3: jogo -->
+<section class="screen" id="game">
+  <div class="topbar">
+    <button class="icon-btn" id="gameBack" aria-label="Voltar para as fases">⬅</button>
+    <h2 id="lvlTitle">Fase 1</h2>
+    <button class="icon-btn" id="btnVoice" aria-label="Ligar ou desligar a voz">🔊</button>
+  </div>
+  <div class="play">
+    <div class="board-wrap">
+      <div class="mission" id="mission"></div>
+      <div class="board" id="board"></div>
+    </div>
+    <div class="code-wrap">
+      <div class="panel">
+        <h3>1. Toque nas setas</h3>
+        <div class="palette" id="palette"></div>
+      </div>
+      <div class="panel">
+        <h3>2. Seu programa <span class="count" id="count"></span></h3>
+        <div class="prog" id="prog"></div>
+      </div>
+      <div class="actions">
+        <button class="act go" id="btnGo">▶ JOGAR</button>
+        <button class="act undo" id="btnUndo" aria-label="Apagar a última seta">⌫ Voltar</button>
+        <button class="act clear" id="btnClear" aria-label="Apagar tudo">🗑 Limpar</button>
+        <button class="act hint" id="btnHint">💡 Dica</button>
+      </div>
+      <div class="msg" id="msg"><span class="ic">🙂</span><span id="msgText"></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- Janela: venceu -->
+<div class="modal" id="winModal">
+  <div class="card">
+    <h2 id="winTitle">Muito bem!</h2>
+    <div class="pic" id="winPic"></div>
+    <div class="bigstars" id="winStars"></div>
+    <p id="winText"></p>
+    <div class="row">
+      <button id="winAgain">↻ De novo</button>
+      <button id="winMap">🗺 Fases</button>
+      <button class="main" id="winNext">Próxima ▶</button>
+    </div>
+  </div>
+</div>
+
+<!-- Janela: professor -->
+<div class="modal" id="teacherModal">
+  <div class="card">
+    <h2>Área do professor</h2>
+    <div id="tStep1">
+      <p>Para entrar, responda: <b id="tQ"></b></p>
+      <input id="tAns" inputmode="numeric" autocomplete="off" aria-label="Resposta">
+      <div class="row">
+        <button id="tCancel">Cancelar</button>
+        <button class="main" id="tOk">Entrar</button>
+      </div>
+    </div>
+    <div id="tStep2" hidden>
+      <p>O progresso fica salvo neste aparelho.</p>
+      <div class="row">
+        <button id="tUnlock">🔓 Liberar todas as fases</button>
+        <button id="tReset">🧹 Zerar progresso</button>
+        <button class="main" id="tClose">Fechar</button>
+      </div>
+      <p id="tInfo"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+/* =========================================================
+   DESENHOS (SVG feitos à mão, simples e originais)
+   ========================================================= */
+const ART = {
+  yoda: `<svg viewBox="0 0 100 100" aria-hidden="true">
+    <path d="M28 97 Q30 62 50 58 Q70 62 72 97 Z" fill="#8b6b45"/>
+    <path d="M41 60 L50 82 L59 60 Z" fill="#d8c59a"/>
+    <path d="M30 38 L3 27 Q6 40 14 44 Q22 49 33 48 Z" fill="#7cb342"/>
+    <path d="M70 38 L97 27 Q94 40 86 44 Q78 49 67 48 Z" fill="#7cb342"/>
+    <path d="M28 37 L10 31 Q14 39 22 42 Z" fill="#c5e1a5" opacity=".6"/>
+    <path d="M72 37 L90 31 Q86 39 78 42 Z" fill="#c5e1a5" opacity=".6"/>
+    <ellipse cx="50" cy="41" rx="22" ry="19" fill="#8bc34a"/>
+    <path d="M38 28 Q50 25 62 28 M40 32 Q50 30 60 32" stroke="#689f38" stroke-width="1.6" fill="none"/>
+    <ellipse cx="41" cy="40" rx="5.5" ry="5" fill="#fff"/><circle cx="41.5" cy="40.5" r="3" fill="#3e2723"/>
+    <ellipse cx="59" cy="40" rx="5.5" ry="5" fill="#fff"/><circle cx="58.5" cy="40.5" r="3" fill="#3e2723"/>
+    <path d="M48 45 Q50 47 52 45" stroke="#558b2f" stroke-width="1.6" fill="none"/>
+    <path d="M43 51 Q50 55 57 51" stroke="#33691e" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </svg>`,
+  vader: `<svg viewBox="0 0 100 100" aria-hidden="true">
+    <path d="M18 97 Q20 60 50 56 Q80 60 82 97 Z" fill="#111"/>
+    <rect x="40" y="68" width="20" height="14" rx="3" fill="#3a3a3a"/>
+    <circle cx="45" cy="73" r="2" fill="#ff4d4d"/><circle cx="51" cy="73" r="2" fill="#4dd2ff"/><circle cx="57" cy="73" r="2" fill="#7dff6b"/>
+    <rect x="43" y="77" width="14" height="2.5" rx="1" fill="#777"/>
+    <path d="M24 52 Q22 16 50 14 Q78 16 76 52 L82 62 L63 58 L50 63 L37 58 L18 62 Z" fill="#1c1c1c"/>
+    <path d="M32 26 Q50 16 68 26" stroke="#555" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M34 36 L66 36 L62 56 L50 61 L38 56 Z" fill="#2e2e2e"/>
+    <path d="M36 35 L47 33 L47 42 L38 42 Z" fill="#6b6b6b"/>
+    <path d="M64 35 L53 33 L53 42 L62 42 Z" fill="#6b6b6b"/>
+    <path d="M50 34 L50 46" stroke="#555" stroke-width="2"/>
+    <path d="M44 47 L56 47 L58 57 L42 57 Z" fill="#444"/>
+    <path d="M46 50 L46 56 M50 50 L50 56 M54 50 L54 56" stroke="#222" stroke-width="1.4"/>
+  </svg>`,
+  obiwan: `<svg viewBox="0 0 100 100" aria-hidden="true">
+    <path d="M20 97 Q22 62 50 57 Q78 62 80 97 Z" fill="#6d4c41"/>
+    <path d="M38 59 L50 97 L62 59 Z" fill="#efe3c3"/>
+    <path d="M44 59 L50 80 L56 59" fill="none" stroke="#c9b68a" stroke-width="2"/>
+    <rect x="38" y="80" width="24" height="5" fill="#8d6e63"/>
+    <ellipse cx="50" cy="38" rx="20" ry="21" fill="#a0694a"/>
+    <ellipse cx="50" cy="41" rx="15" ry="17" fill="#f3cba8"/>
+    <path d="M33 36 Q34 18 50 18 Q66 18 67 36 Q60 26 50 27 Q40 26 33 36 Z" fill="#a0694a"/>
+    <path d="M35 44 Q37 63 50 64 Q63 63 65 44 Q59 53 50 53 Q41 53 35 44 Z" fill="#a0694a"/>
+    <circle cx="44" cy="39" r="2.3" fill="#3e2723"/><circle cx="56" cy="39" r="2.3" fill="#3e2723"/>
+    <path d="M40 34 L47 33 M53 33 L60 34" stroke="#7b4a32" stroke-width="2" stroke-linecap="round"/>
+    <path d="M46 55 Q50 57 54 55" stroke="#f3cba8" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </svg>`,
+  wall: `<svg viewBox="0 0 100 100" aria-hidden="true" preserveAspectRatio="none">
+    <rect width="100" height="100" fill="#6e7792"/>
+    <rect x="5" y="5" width="90" height="90" rx="6" fill="#8a93ad"/>
+    <rect x="5" y="5" width="90" height="12" rx="6" fill="#a7b0c8"/>
+    <rect x="18" y="32" width="64" height="10" rx="4" fill="#5d6684"/>
+    <rect x="18" y="52" width="64" height="10" rx="4" fill="#5d6684"/>
+    <circle cx="14" cy="86" r="4" fill="#5d6684"/><circle cx="86" cy="86" r="4" fill="#5d6684"/>
+    <circle cx="14" cy="26" r="4" fill="#5d6684"/><circle cx="86" cy="26" r="4" fill="#5d6684"/>
+  </svg>`
+};
+function saberSVG(color) {
+  return `<svg viewBox="0 0 100 100" aria-hidden="true">
+    <line x1="40" y1="60" x2="86" y2="14" stroke="${color}" stroke-width="18" stroke-linecap="round" opacity=".35"/>
+    <line x1="40" y1="60" x2="86" y2="14" stroke="${color}" stroke-width="10" stroke-linecap="round"/>
+    <line x1="40" y1="60" x2="86" y2="14" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+    <line x1="14" y1="86" x2="40" y2="60" stroke="#cfd4dc" stroke-width="12" stroke-linecap="round"/>
+    <line x1="18" y1="82" x2="36" y2="64" stroke="#555" stroke-width="12" stroke-dasharray="3 4"/>
+    <line x1="37" y1="63" x2="43" y2="57" stroke="#222" stroke-width="15"/>
+  </svg>`;
+}
+function arrowSVG(rot, color) {
+  return `<svg viewBox="0 0 100 100" aria-hidden="true"><g transform="rotate(${rot} 50 50)">
+    <path d="M12 40 H54 V20 L90 50 L54 80 V60 H12 Z" fill="${color || '#fff'}" stroke="rgba(0,0,0,.15)" stroke-width="3" stroke-linejoin="round"/>
+  </g></svg>`;
+}
+
+const CHARS = {
+  yoda:   { name: 'Yoda',        saber: '#3dff5a', saberName: 'verde' },
+  vader:  { name: 'Darth Vader', saber: '#ff2e2e', saberName: 'vermelho' },
+  obiwan: { name: 'Obi-Wan',     saber: '#3da5ff', saberName: 'azul' }
+};
+
+const DIRS = {
+  up:    { dx: 0,  dy: -1, label: 'CIMA',     say: 'para cima',     rot: -90 },
+  down:  { dx: 0,  dy: 1,  label: 'BAIXO',    say: 'para baixo',    rot: 90 },
+  left:  { dx: -1, dy: 0,  label: 'ESQUERDA', say: 'para a esquerda', rot: 180 },
+  right: { dx: 1,  dy: 0,  label: 'DIREITA',  say: 'para a direita',  rot: 0 }
+};
+
+/* =========================================================
+   FASES  —  S = personagem, L = sabre de luz, # = parede, . = caminho
+   ========================================================= */
+const LEVELS = [
+  { name: 'Primeiro passo',      map: ['S.L'] },
+  { name: 'Descendo',            map: ['S', '.', 'L'] },
+  { name: 'Virando a esquina',   map: ['S..', '##.', '##L'] },
+  { name: 'Subindo',             map: ['##L', '##.', 'S..'] },
+  { name: 'Para a esquerda',     map: ['L###', '.###', '...S'] },
+  { name: 'Escada espacial',     map: ['S.##', '#..#', '##..', '###L'] },
+  { name: 'Dois caminhos',       map: ['S...#', '#.#.#', '#.#..', '###.L'] },
+  { name: 'Volta grande',        map: ['S.###', '#.###', '#...#', '###.#', 'L...#'] },
+  { name: 'Sobe e desce',        map: ['S.#L.', '#.#.#', '#...#'] },
+  { name: 'Grande missão',       map: ['S...#', '###.#', 'L#..#', '.#.##', '...##'] }
+];
+const MAX_BLOCKS = 20;
+
+function parseLevel(lv) {
+  const rows = lv.map.length, cols = lv.map[0].length;
+  const walls = new Set(); let start, goal;
+  lv.map.forEach((row, y) => [...row].forEach((ch, x) => {
+    if (ch === '#') walls.add(x + ',' + y);
+    if (ch === 'S') start = { x, y };
+    if (ch === 'L') goal = { x, y };
+  }));
+  return { rows, cols, walls, start, goal };
+}
+function isFree(L, x, y) { return x >= 0 && y >= 0 && x < L.cols && y < L.rows && !L.walls.has(x + ',' + y); }
+function shortestPath(L) {
+  const key = (p) => p.x + ',' + p.y, prev = { [key(L.start)]: null }, q = [L.start];
+  while (q.length) {
+    const p = q.shift();
+    if (p.x === L.goal.x && p.y === L.goal.y) break;
+    for (const d of Object.keys(DIRS)) {
+      const n = { x: p.x + DIRS[d].dx, y: p.y + DIRS[d].dy };
+      if (isFree(L, n.x, n.y) && !(key(n) in prev)) { prev[key(n)] = { p, d }; q.push(n); }
+    }
+  }
+  const out = []; let k = key(L.goal);
+  while (prev[k]) { out.unshift({ x: +k.split(',')[0], y: +k.split(',')[1], d: prev[k].d }); k = key(prev[k].p); }
+  return out;
+}
+
+/* =========================================================
+   PROGRESSO (salvo no navegador)
+   ========================================================= */
+const SAVE_KEY = 'missao-sabre-de-luz-v1';
+let save = { char: 'yoda', stars: Array(LEVELS.length).fill(0), unlockAll: false };
+try { const s = JSON.parse(localStorage.getItem(SAVE_KEY)); if (s && Array.isArray(s.stars)) save = Object.assign(save, s); } catch (e) {}
+function persist() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) {} }
+function unlocked(i) { return save.unlockAll || i === 0 || save.stars[i - 1] > 0 || save.stars[i] > 0; }
+
+/* =========================================================
+   SOM E VOZ
+   ========================================================= */
+let voiceOn = true;
+try { voiceOn = localStorage.getItem(SAVE_KEY + '-voz') !== 'off'; } catch (e) {}
+function say(text) {
+  if (!voiceOn || !('speechSynthesis' in window)) return;
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'pt-BR'; u.rate = 0.9; u.pitch = 1.05;
+    const v = speechSynthesis.getVoices().find((v) => /^pt/i.test(v.lang));
+    if (v) u.voice = v;
+    speechSynthesis.speak(u);
+  } catch (e) {}
+}
+let actx = null;
+function tone(freq, dur = 0.12, type = 'sine', when = 0, vol = 0.18) {
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    const o = actx.createOscillator(), g = actx.createGain(), t = actx.currentTime + when;
+    o.type = type; o.frequency.setValueAtTime(freq, t);
+    g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    o.connect(g).connect(actx.destination); o.start(t); o.stop(t + dur + 0.02);
+  } catch (e) {}
+}
+const sfx = {
+  add: () => tone(660, 0.08, 'triangle'),
+  remove: () => tone(330, 0.1, 'triangle'),
+  step: () => tone(520, 0.08, 'square', 0, 0.06),
+  bump: () => { tone(140, 0.25, 'sawtooth', 0, 0.15); },
+  win: () => [523, 659, 784, 1046].forEach((f, i) => tone(f, 0.22, 'triangle', i * 0.13)),
+  saber: () => { tone(110, 0.5, 'sawtooth', 0, 0.08); tone(220, 0.5, 'sine', 0.05, 0.1); }
+};
+
+/* =========================================================
+   TELAS
+   ========================================================= */
+const $ = (id) => document.getElementById(id);
+function show(id) { document.querySelectorAll('.screen').forEach((s) => s.classList.toggle('on', s.id === id)); window.scrollTo(0, 0); }
+
+// estrelas do fundo
+(function () {
+  const box = $('stars');
+  for (let i = 0; i < 90; i++) {
+    const s = document.createElement('i');
+    s.style.left = Math.random() * 100 + '%'; s.style.top = Math.random() * 100 + '%';
+    s.style.animationDelay = (Math.random() * 3) + 's';
+    if (Math.random() < .2) { s.style.width = s.style.height = '3px'; }
+    box.appendChild(s);
+  }
+})();
+
+// --- Tela inicial ---
+function renderChars() {
+  const box = $('chars'); box.innerHTML = '';
+  for (const [id, c] of Object.entries(CHARS)) {
+    const b = document.createElement('button');
+    b.className = 'char-btn' + (save.char === id ? ' sel' : '');
+    b.setAttribute('aria-pressed', save.char === id);
+    b.innerHTML = `${ART[id]}<span class="nm">${c.name}</span><span class="sb">${saberSVG(c.saber)} sabre ${c.saberName}</span>`;
+    b.onclick = () => { save.char = id; persist(); renderChars(); sfx.saber(); say(c.name); };
+    box.appendChild(b);
+  }
+}
+$('btnStart').onclick = () => { renderMap(); show('map'); say('Escolha a fase'); };
+
+// --- Mapa de fases ---
+function starsText(n) { return '★'.repeat(n) + '☆'.repeat(3 - n); }
+function renderMap() {
+  $('mapHero').innerHTML = ART[save.char];
+  const box = $('levels'); box.innerHTML = '';
+  LEVELS.forEach((lv, i) => {
+    const b = document.createElement('button');
+    const ok = unlocked(i);
+    b.className = 'lvl' + (ok ? '' : ' locked');
+    b.innerHTML = ok ? `${i + 1}<span class="st">${save.stars[i] ? starsText(save.stars[i]) : ''}</span>` : '🔒';
+    b.setAttribute('aria-label', ok ? `Fase ${i + 1}` : `Fase ${i + 1} trancada`);
+    b.onclick = () => { if (ok) startLevel(i); else { sfx.bump(); say('Termine a fase anterior primeiro'); } };
+    box.appendChild(b);
+  });
+}
+$('mapBack').onclick = () => { renderChars(); show('home'); };
+
+/* =========================================================
+   JOGO
+   ========================================================= */
+let cur = 0, L = null, program = [], running = false, pos = null, cell = 80;
+let fails = 0, usedHint = false, hintTimer = null;
+
+function startLevel(i) {
+  cur = i; L = parseLevel(LEVELS[i]); program = []; running = false; pos = null;
+  fails = 0; usedHint = false;
+  const c = CHARS[save.char];
+  $('lvlTitle').textContent = `Fase ${i + 1} de ${LEVELS.length} · ${LEVELS[i].name}`;
+  $('mission').innerHTML = `Ajude <b>${c.name}</b> a pegar o <b>sabre de luz ${c.saberName}</b>!`;
+  show('game');
+  renderPalette(); buildBoard(); renderProgram();
+  setMsg('👉', 'Toque nas setas para montar o caminho. Depois aperte JOGAR.');
+  say(`Fase ${i + 1}. Ajude ${c.name} a pegar o sabre de luz. Toque nas setas e depois aperte jogar.`);
+}
+
+function renderPalette() {
+  const box = $('palette'); box.innerHTML = '';
+  for (const d of ['left', 'up', 'down', 'right']) {
+    const b = document.createElement('button');
+    b.className = 'blk';
+    b.innerHTML = arrowSVG(DIRS[d].rot) + `<small>${DIRS[d].label}</small>`;
+    b.setAttribute('aria-label', 'Seta ' + DIRS[d].say);
+    b.onclick = () => addBlock(d);
+    box.appendChild(b);
+  }
+}
+
+function buildBoard() {
+  const board = $('board'); board.innerHTML = '';
+  const wrap = board.parentElement;
+  const wide = window.innerWidth > 900;
+  const maxW = Math.max(160, wrap.clientWidth - 28);
+  const maxH = Math.max(200, wide ? window.innerHeight - 190 : window.innerHeight * 0.5);
+  cell = Math.floor(Math.min(maxW / L.cols, maxH / L.rows, 120));
+  board.style.width = cell * L.cols + 'px'; board.style.height = cell * L.rows + 'px';
+  for (let y = 0; y < L.rows; y++) for (let x = 0; x < L.cols; x++) {
+    const d = document.createElement('div');
+    const wall = L.walls.has(x + ',' + y);
+    d.className = 'cell ' + (wall ? 'wall' : 'floor' + ((x + y) % 2 ? ' alt' : ''));
+    if (!wall && x === L.start.x && y === L.start.y) d.classList.add('start-mark');
+    Object.assign(d.style, { left: x * cell + 'px', top: y * cell + 'px', width: cell + 'px', height: cell + 'px' });
+    if (wall) d.innerHTML = ART.wall;
+    if (x === L.goal.x && y === L.goal.y) { d.classList.add('goal'); d.innerHTML = `<div class="sab">${saberSVG(CHARS[save.char].saber)}</div>`; d.id = 'goalCell'; }
+    board.appendChild(d);
+  }
+  const h = document.createElement('div');
+  h.className = 'hero'; h.id = 'hero';
+  h.style.width = h.style.height = cell + 'px';
+  h.innerHTML = `<div class="inner">${ART[save.char]}</div><div class="held">${saberSVG(CHARS[save.char].saber)}</div>`;
+  board.appendChild(h);
+  placeHero(pos && !running ? pos : L.start, true);
+  if (!pos) pos = { ...L.start };
+}
+function placeHero(p, instant) {
+  const h = $('hero'); if (!h) return;
+  if (instant) h.style.transition = 'none';
+  h.style.transform = `translate(${p.x * cell}px, ${p.y * cell}px)`;
+  if (instant) { h.offsetHeight; h.style.transition = ''; }
+}
+function resetHero() {
+  pos = { ...L.start }; placeHero(pos, true);
+  const h = $('hero'); h.classList.remove('won', 'bump'); h.querySelector('.inner').classList.remove('flip');
+  const g = $('goalCell'); if (g) g.style.visibility = '';
+  document.querySelectorAll('.prog .blk').forEach((b) => b.classList.remove('now', 'bad'));
+}
+
+function renderProgram() {
+  const box = $('prog'); box.innerHTML = '<div class="flag" aria-label="Começo do programa">🚩</div>';
+  if (!program.length) {
+    const e = document.createElement('div'); e.className = 'empty'; e.textContent = 'Toque nas setas ↑';
+    box.appendChild(e);
+  }
+  program.forEach((d, i) => {
+    const b = document.createElement('button');
+    b.className = 'blk';
+    b.innerHTML = arrowSVG(DIRS[d].rot) + `<small>${DIRS[d].label}</small><span class="x">✕</span>`;
+    b.setAttribute('aria-label', `Passo ${i + 1}: ${DIRS[d].say}. Toque para tirar.`);
+    b.onclick = () => removeBlock(i);
+    box.appendChild(b);
+  });
+  $('count').textContent = program.length ? `${program.length} ${program.length === 1 ? 'passo' : 'passos'}` : '';
+  $('btnGo').disabled = running || !program.length;
+  $('btnUndo').disabled = running || !program.length;
+  $('btnClear').disabled = running || !program.length;
+  $('btnHint').disabled = running;
+}
+
+function addBlock(d) {
+  if (running) return;
+  if (program.length >= MAX_BLOCKS) { setMsg('✋', 'Já tem muitas setas! Aperte JOGAR.'); say('Já tem muitas setas. Aperte jogar.'); return; }
+  program.push(d); sfx.add(); say(DIRS[d].say.replace('para a ', '').replace('para ', ''));
+  resetHero(); renderProgram();
+  setMsg('👍', 'Muito bem! Quando terminar, aperte ▶ JOGAR.');
+}
+function removeBlock(i) {
+  if (running) return;
+  program.splice(i, 1); sfx.remove(); resetHero(); renderProgram();
+}
+$('btnUndo').onclick = () => { if (program.length) removeBlock(program.length - 1); };
+$('btnClear').onclick = () => { if (running) return; program = []; sfx.remove(); resetHero(); renderProgram(); setMsg('👉', 'Programa limpo. Comece de novo!'); say('Vamos começar de novo'); };
+
+function setMsg(icon, text) { $('msg').querySelector('.ic').textContent = icon; $('msgText').textContent = text; }
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+async function run() {
+  if (running || !program.length) return;
+  running = true; resetHero(); renderProgram(); clearHint();
+  setMsg('🚀', 'Olha o seu programa funcionando...');
+  const hero = $('hero'), blocks = document.querySelectorAll('.prog .blk');
+  await sleep(300);
+  for (let i = 0; i < program.length; i++) {
+    const D = DIRS[program[i]];
+    blocks.forEach((b) => b.classList.remove('now'));
+    blocks[i].classList.add('now');
+    if (D.dx) hero.querySelector('.inner').classList.toggle('flip', D.dx < 0);
+    const nx = pos.x + D.dx, ny = pos.y + D.dy;
+    if (!isFree(L, nx, ny)) {
+      // bateu na parede
+      hero.style.transform = `translate(${(pos.x + D.dx * 0.25) * cell}px, ${(pos.y + D.dy * 0.25) * cell}px)`;
+      await sleep(220); placeHero(pos);
+      hero.classList.add('bump'); sfx.bump();
+      blocks[i].classList.remove('now'); blocks[i].classList.add('bad');
+      fails++;
+      setMsg('🧱', `Opa! Tem uma parede. Troque a seta vermelha (passo ${i + 1}).`);
+      say('Opa! Tem uma parede. Troque a seta vermelha.');
+      await sleep(500); hero.classList.remove('bump');
+      running = false; renderProgram(); keepMarks(i, 'bad');
+      return;
+    }
+    pos = { x: nx, y: ny }; placeHero(pos); sfx.step();
+    await sleep(560);
+    if (pos.x === L.goal.x && pos.y === L.goal.y) { await win(); return; }
+  }
+  blocks.forEach((b) => b.classList.remove('now'));
+  fails++;
+  running = false; renderProgram();
+  setMsg('🤏', 'Quase! O sabre ainda está longe. Coloque mais setas.');
+  say('Quase! O sabre ainda está longe. Coloque mais setas.');
+}
+function keepMarks(i, cls) { const b = document.querySelectorAll('.prog .blk')[i]; if (b) b.classList.add(cls); }
+$('btnGo').onclick = run;
+
+async function win() {
+  const hero = $('hero'), c = CHARS[save.char];
+  $('goalCell').style.visibility = 'hidden';
+  hero.classList.add('won'); sfx.saber();
+  document.querySelectorAll('.prog .blk').forEach((b) => b.classList.remove('now'));
+  const stars = (fails === 0 && !usedHint) ? 3 : 2;
+  save.stars[cur] = Math.max(save.stars[cur], stars); persist();
+  setMsg('🎉', `Você conseguiu! ${c.name} pegou o sabre de luz!`);
+  await sleep(700); sfx.win(); confetti();
+  running = false; renderProgram();
+  const last = cur === LEVELS.length - 1;
+  $('winTitle').textContent = last ? 'Você completou todas as missões!' : 'Muito bem!';
+  $('winPic').innerHTML = ART[save.char] + `<div class="held">${saberSVG(c.saber)}</div>`;
+  $('winStars').innerHTML = [1, 2, 3].map((n) => `<span class="${n <= stars ? '' : 'off'}">⭐</span>`).join('');
+  $('winText').textContent = last
+    ? `Parabéns! Você é um mestre da programação! ${c.name} está muito feliz.`
+    : `${c.name} pegou o sabre de luz ${c.saberName}!`;
+  $('winNext').textContent = last ? '🏠 Início' : 'Próxima ▶';
+  $('winModal').classList.add('on');
+  say(last ? `Parabéns! Você completou todas as missões! Você é um mestre da programação!` : `Muito bem! ${c.name} pegou o sabre de luz!`);
+}
+function confetti() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const icons = ['⭐', '✨', '🌟', '💫'];
+  for (let i = 0; i < 28; i++) {
+    const s = document.createElement('div'); s.className = 'confetti';
+    s.textContent = icons[i % icons.length];
+    s.style.left = Math.random() * 100 + 'vw';
+    s.style.animationDuration = (1.8 + Math.random() * 1.8) + 's';
+    s.style.animationDelay = (Math.random() * .6) + 's';
+    document.body.appendChild(s); setTimeout(() => s.remove(), 4500);
+  }
+}
+$('winAgain').onclick = () => { $('winModal').classList.remove('on'); startLevel(cur); };
+$('winMap').onclick = () => { $('winModal').classList.remove('on'); renderMap(); show('map'); };
+$('winNext').onclick = () => {
+  $('winModal').classList.remove('on');
+  if (cur < LEVELS.length - 1) startLevel(cur + 1); else { renderChars(); show('home'); }
+};
+
+// --- Dica: mostra as pegadas do caminho por alguns segundos ---
+function clearHint() { clearTimeout(hintTimer); document.querySelectorAll('.foot').forEach((f) => f.remove()); }
+$('btnHint').onclick = () => {
+  if (running) return;
+  clearHint(); resetHero(); usedHint = true;
+  const path = shortestPath(L), board = $('board');
+  path.forEach((p, i) => {
+    if (p.x === L.goal.x && p.y === L.goal.y) return;
+    const f = document.createElement('div'); f.className = 'foot';
+    Object.assign(f.style, { left: p.x * cell + 'px', top: p.y * cell + 'px', width: cell + 'px', height: cell + 'px', animationDelay: (i * 0.18) + 's' });
+    f.innerHTML = `<span>${arrowSVG(DIRS[p.d].rot, '#3a2a00')}</span>`;
+    board.appendChild(f);
+  });
+  // seta do primeiro passo também
+  setMsg('💡', `Siga as bolinhas amarelas! São ${path.length} passos.`);
+  say(`Siga as bolinhas amarelas. São ${path.length} passos.`);
+  hintTimer = setTimeout(clearHint, 6000);
+};
+
+$('gameBack').onclick = () => { running = false; clearHint(); renderMap(); show('map'); };
+function paintVoice() { $('btnVoice').textContent = voiceOn ? '🔊' : '🔇'; }
+$('btnVoice').onclick = () => {
+  voiceOn = !voiceOn; paintVoice();
+  try { localStorage.setItem(SAVE_KEY + '-voz', voiceOn ? 'on' : 'off'); } catch (e) {}
+  if (!voiceOn && 'speechSynthesis' in window) speechSynthesis.cancel(); else say('Voz ligada');
+};
+paintVoice();
+
+// Teclado: setas montam o programa, Enter/Espaço joga, Backspace apaga
+document.addEventListener('keydown', (e) => {
+  if (!$('game').classList.contains('on') || $('winModal').classList.contains('on')) return;
+  const map = { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right' };
+  if (map[e.key]) { e.preventDefault(); addBlock(map[e.key]); }
+  else if (e.key === 'Enter' || e.key === ' ') { if (document.activeElement && document.activeElement.tagName === 'BUTTON' && e.key === ' ') return; e.preventDefault(); run(); }
+  else if (e.key === 'Backspace') { e.preventDefault(); $('btnUndo').onclick(); }
+});
+
+let rz;
+window.addEventListener('resize', () => {
+  clearTimeout(rz);
+  rz = setTimeout(() => { if ($('game').classList.contains('on') && !running) { clearHint(); buildBoard(); placeHero(pos, true); } }, 150);
+});
+
+/* =========================================================
+   ÁREA DO PROFESSOR
+   ========================================================= */
+let tAnswer = 0;
+$('btnTeacher').onclick = () => {
+  const a = 6 + Math.floor(Math.random() * 4), b = 6 + Math.floor(Math.random() * 4);
+  tAnswer = a * b; $('tQ').textContent = `${a} × ${b} = ?`; $('tAns').value = '';
+  $('tStep1').hidden = false; $('tStep2').hidden = true; $('tInfo').textContent = '';
+  $('teacherModal').classList.add('on'); setTimeout(() => $('tAns').focus(), 50);
+};
+$('tCancel').onclick = $('tClose').onclick = () => $('teacherModal').classList.remove('on');
+$('tOk').onclick = () => {
+  if (parseInt($('tAns').value, 10) === tAnswer) { $('tStep1').hidden = true; $('tStep2').hidden = false; }
+  else { $('tAns').value = ''; $('tAns').placeholder = 'Tente de novo'; }
+};
+$('tAns').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('tOk').onclick(); });
+$('tUnlock').onclick = () => { save.unlockAll = true; persist(); $('tInfo').textContent = '✅ Todas as fases foram liberadas.'; };
+$('tReset').onclick = () => { save.stars = Array(LEVELS.length).fill(0); save.unlockAll = false; persist(); $('tInfo').textContent = '✅ Progresso zerado.'; };
+
+renderChars();
+</script>
+</body>
+</html>
