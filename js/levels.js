@@ -1,5 +1,5 @@
 /*
- * Dados das 20 fases.
+ * Dados das 40 fases (1 a 20: primeiras missões; 21 a 40: novas missões, mais difíceis).
  * Um único sistema de jogo lê esta lista.
  *
  * steps  : ações necessárias (a ordem escrita aqui é UMA resposta certa)
@@ -291,5 +291,342 @@ const LEVELS = [
       ['licao', 'dormir'], ['brincar', 'dormir'], ['jantar', 'dormir'], ['pijama', 'dormir']
     ],
     extra: [{ id: 'x_lua', label: 'VOAR ATÉ A LUA', icon: '🚀' }]
+  },
+
+  /* ================= FASES 21 A 40 (PARTE 2: NOVAS MISSÕES) ================= */
+  {
+    name: 'ATRAVESSANDO A RUA', icon: '🚦', scene: 'park',
+    goal: 'ENSINE O BIPO A ATRAVESSAR A RUA COM SEGURANÇA!',
+    steps: [
+      { id: 'mao', label: 'DAR A MÃO A UM ADULTO', icon: '🤝' },
+      { id: 'parar', label: 'PARAR NA CALÇADA', icon: '✋' },
+      { id: 'olhar', label: 'OLHAR PARA OS DOIS LADOS', icon: '👀' },
+      { id: 'sinal', label: 'ESPERAR O SINAL VERDE', icon: '🚦' },
+      { id: 'atravessar', label: 'ATRAVESSAR NA FAIXA', icon: '🚶' }
+    ],
+    rules: [['mao', 'atravessar'], ['parar', 'olhar'], ['parar', 'sinal'], ['olhar', 'atravessar'], ['sinal', 'atravessar']],
+    extra: [{ id: 'x_pipa', label: 'SOLTAR PIPA', icon: '🪁' }]
+  },
+  {
+    name: 'SUCO DE LARANJA', icon: '🍊', scene: 'kitchen',
+    goal: 'VAMOS FAZER UM SUCO DE LARANJA FRESQUINHO!',
+    steps: [
+      { id: 'lavar', label: 'LAVAR AS LARANJAS', icon: '🍊' },
+      { id: 'cortar', label: 'PEDIR A UM ADULTO PARA CORTAR', icon: '🧑‍🍳' },
+      { id: 'espremer', label: 'ESPREMER AS LARANJAS', icon: '✊' },
+      { id: 'copo', label: 'COLOCAR O SUCO NO COPO', icon: '🥤' },
+      { id: 'beber', label: 'BEBER O SUCO', icon: '😋' }
+    ],
+    rules: 'chain',
+    extra: [{ id: 'x_bola', label: 'CHUTAR A BOLA', icon: '⚽' }]
+  },
+  {
+    name: 'ARRUMANDO A CAMA', icon: '🛏️', scene: 'bedroom',
+    goal: 'BOM DIA! AJUDE O BIPO A ARRUMAR A CAMA.',
+    steps: [
+      { id: 'janela', label: 'ABRIR A JANELA', icon: '🪟' },
+      { id: 'lencol', label: 'ESTICAR O LENÇOL', icon: '🛏️' },
+      { id: 'cobertor', label: 'ESTENDER O COBERTOR', icon: '🛌' },
+      { id: 'travesseiro', label: 'ARRUMAR O TRAVESSEIRO', icon: '☁️' },
+      { id: 'ursinho', label: 'SENTAR O URSINHO NA CAMA', icon: '🧸' }
+    ],
+    rules: [['lencol', 'cobertor'], ['cobertor', 'travesseiro'], ['travesseiro', 'ursinho']],
+    extra: [{ id: 'x_nadar', label: 'NADAR NA PISCINA', icon: '🏊' }]
+  },
+  {
+    name: 'LAVANDO A LOUÇA', icon: '🧽', scene: 'kitchen',
+    goal: 'O JANTAR ACABOU! AJUDE A LAVAR OS PRATOS.',
+    steps: [
+      { id: 'torneira', label: 'ABRIR A TORNEIRA', icon: '🚰' },
+      { id: 'esponja', label: 'MOLHAR A ESPONJA', icon: '🧽' },
+      { id: 'detergente', label: 'PASSAR DETERGENTE', icon: '🧴' },
+      { id: 'esfregar', label: 'ESFREGAR O PRATO', icon: '🍽️' },
+      { id: 'enxaguar', label: 'ENXAGUAR O PRATO', icon: '💦' },
+      { id: 'escorredor', label: 'COLOCAR NO ESCORREDOR', icon: '🧺' }
+    ],
+    rules: 'chain',
+    extra: [{ id: 'x_casaco', label: 'VESTIR O CASACO', icon: '🧥' }]
+  },
+  {
+    name: 'LENDO UM LIVRO', icon: '📖', scene: 'school',
+    goal: 'É HORA DA LEITURA NA BIBLIOTECA!',
+    steps: [
+      { id: 'escolher', label: 'ESCOLHER UM LIVRO', icon: '📚' },
+      { id: 'sentar', label: 'SENTAR NA CADEIRA', icon: '🪑' },
+      { id: 'abrir', label: 'ABRIR O LIVRO', icon: '📖' },
+      { id: 'ler', label: 'LER A HISTÓRIA', icon: '👀' },
+      { id: 'fechar', label: 'FECHAR O LIVRO', icon: '📕' },
+      { id: 'devolver', label: 'DEVOLVER À ESTANTE', icon: '🗄️' }
+    ],
+    rules: [['escolher', 'abrir'], ['abrir', 'ler'], ['sentar', 'ler'], ['ler', 'fechar'], ['fechar', 'devolver']],
+    extra: [{ id: 'x_chuveiro', label: 'ABRIR O CHUVEIRO', icon: '🚿' }]
+  },
+  {
+    name: 'FAZENDO A LIÇÃO DE CASA', icon: '📝', scene: 'school',
+    goal: 'O BIPO TEM LIÇÃO DE CASA. VAMOS FAZER JUNTOS!',
+    steps: [
+      { id: 'tirar', label: 'TIRAR O CADERNO DA MOCHILA', icon: '📓' },
+      { id: 'ler', label: 'LER A TAREFA', icon: '👀' },
+      { id: 'fazer', label: 'FAZER A ATIVIDADE', icon: '✏️' },
+      { id: 'conferir', label: 'CONFERIR AS RESPOSTAS', icon: '✅' },
+      { id: 'guardar', label: 'GUARDAR O CADERNO NA MOCHILA', icon: '🎒' }
+    ],
+    rules: 'chain',
+    extra: [
+      { id: 'x_pipoca', label: 'COMER PIPOCA', icon: '🍿' },
+      { id: 'x_luz', label: 'APAGAR A LUZ', icon: '💡' }
+    ]
+  },
+  {
+    name: 'COLHENDO NA HORTA', icon: '🥬', scene: 'garden',
+    goal: 'AS VERDURAS DA HORTA ESTÃO PRONTAS PARA COLHER!',
+    steps: [
+      { id: 'cesta', label: 'PEGAR A CESTA', icon: '🧺' },
+      { id: 'colher', label: 'COLHER AS VERDURAS', icon: '🥬' },
+      { id: 'colocar', label: 'COLOCAR NA CESTA', icon: '📥' },
+      { id: 'levar', label: 'LEVAR PARA A COZINHA', icon: '🏠' },
+      { id: 'lavar', label: 'LAVAR AS VERDURAS', icon: '💧' }
+    ],
+    rules: 'chain',
+    extra: [
+      { id: 'x_trem', label: 'ANDAR DE TREM', icon: '🚂' },
+      { id: 'x_pijama', label: 'COLOCAR O PIJAMA', icon: '🩳' }
+    ]
+  },
+  {
+    name: 'PIQUENIQUE NO PARQUE', icon: '🧺', scene: 'park',
+    goal: 'O DIA ESTÁ LINDO! VAMOS FAZER UM PIQUENIQUE.',
+    steps: [
+      { id: 'cesta', label: 'ARRUMAR A CESTA', icon: '🧺' },
+      { id: 'ir', label: 'IR ATÉ O PARQUE', icon: '🚶' },
+      { id: 'toalha', label: 'ESTENDER A TOALHA', icon: '🟥' },
+      { id: 'comer', label: 'COMER O LANCHE', icon: '🥪' },
+      { id: 'lixo', label: 'RECOLHER O LIXO', icon: '🗑️' },
+      { id: 'voltar', label: 'VOLTAR PARA CASA', icon: '🏠' }
+    ],
+    rules: 'chain',
+    extra: [
+      { id: 'x_licao', label: 'FAZER A LIÇÃO', icon: '📝' },
+      { id: 'x_banho', label: 'TOMAR BANHO', icon: '🚿' }
+    ]
+  },
+  {
+    name: 'FAZENDO UM BOLO', icon: '🍰', scene: 'kitchen',
+    goal: 'VAMOS FAZER UM BOLO COM A AJUDA DE UM ADULTO!',
+    steps: [
+      { id: 'maos', label: 'LAVAR AS MÃOS', icon: '🧼' },
+      { id: 'ingredientes', label: 'SEPARAR OS INGREDIENTES', icon: '🥚' },
+      { id: 'misturar', label: 'MISTURAR A MASSA', icon: '🥣' },
+      { id: 'forma', label: 'COLOCAR NA FORMA', icon: '🍰' },
+      { id: 'forno', label: 'O ADULTO COLOCA NO FORNO', icon: '🧑‍🍳' },
+      { id: 'esfriar', label: 'ESPERAR ESFRIAR', icon: '⏳' },
+      { id: 'comer', label: 'COMER O BOLO', icon: '😋' }
+    ],
+    rules: [['maos', 'misturar'], ['ingredientes', 'misturar'], ['misturar', 'forma'], ['forma', 'forno'], ['forno', 'esfriar'], ['esfriar', 'comer']],
+    extra: [
+      { id: 'x_cama', label: 'ARRUMAR A CAMA', icon: '🛏️' },
+      { id: 'x_bike', label: 'ANDAR DE BICICLETA', icon: '🚲' }
+    ]
+  },
+  {
+    name: 'DIA DE CHUVA', icon: '☔', scene: 'park',
+    goal: 'VAI CHOVER! PREPARE O BIPO PARA SAIR DE CASA.',
+    steps: [
+      { id: 'ceu', label: 'OLHAR O CÉU', icon: '🌧️' },
+      { id: 'capa', label: 'VESTIR A CAPA DE CHUVA', icon: '🧥' },
+      { id: 'botas', label: 'CALÇAR AS BOTAS', icon: '🥾' },
+      { id: 'pegar', label: 'PEGAR O GUARDA-CHUVA', icon: '🌂' },
+      { id: 'sair', label: 'SAIR DE CASA', icon: '🚪' },
+      { id: 'abrir', label: 'ABRIR O GUARDA-CHUVA', icon: '☔' }
+    ],
+    rules: [['ceu', 'capa'], ['ceu', 'botas'], ['ceu', 'pegar'], ['capa', 'sair'], ['botas', 'sair'], ['pegar', 'sair'], ['sair', 'abrir']],
+    extra: [
+      { id: 'x_piscina', label: 'IR À PISCINA', icon: '🏊' },
+      { id: 'x_sorvete', label: 'TOMAR SORVETE', icon: '🍦' }
+    ]
+  },
+  {
+    name: 'ARRUMANDO A SALA DE AULA', icon: '🏫', scene: 'school',
+    goal: 'A AULA ACABOU! DEIXE A SALA ARRUMADINHA.',
+    steps: [
+      { id: 'lapis', label: 'GUARDAR OS LÁPIS', icon: '✏️' },
+      { id: 'papeis', label: 'RECOLHER OS PAPÉIS', icon: '📄' },
+      { id: 'lixo', label: 'JOGAR O LIXO NA LIXEIRA', icon: '🗑️' },
+      { id: 'cadeira', label: 'EMPURRAR A CADEIRA', icon: '🪑' },
+      { id: 'mochila', label: 'PEGAR A MOCHILA', icon: '🎒' },
+      { id: 'tchau', label: 'DAR TCHAU À PROFESSORA', icon: '👋' }
+    ],
+    rules: [['papeis', 'lixo'], ['lapis', 'mochila'], ['lixo', 'mochila'], ['mochila', 'tchau'], ['cadeira', 'tchau']],
+    extra: [
+      { id: 'x_flor', label: 'PLANTAR UMA FLOR', icon: '🌷' },
+      { id: 'x_banho', label: 'TOMAR BANHO', icon: '🚿' }
+    ]
+  },
+  {
+    name: 'GUARDANDO A ROUPA LIMPA', icon: '👕', scene: 'bedroom',
+    goal: 'A ROUPA SECOU! AJUDE O BIPO A GUARDAR TUDO.',
+    steps: [
+      { id: 'varal', label: 'TIRAR A ROUPA DO VARAL', icon: '🧺' },
+      { id: 'separar', label: 'SEPARAR AS PEÇAS', icon: '🗂️' },
+      { id: 'dobrar', label: 'DOBRAR AS CAMISETAS', icon: '👕' },
+      { id: 'meias', label: 'JUNTAR AS MEIAS', icon: '🧦' },
+      { id: 'guardar', label: 'GUARDAR NO ARMÁRIO', icon: '🚪' }
+    ],
+    rules: [['varal', 'separar'], ['separar', 'dobrar'], ['separar', 'meias'], ['dobrar', 'guardar'], ['meias', 'guardar']],
+    extra: [
+      { id: 'x_pipoca', label: 'COMER PIPOCA', icon: '🍿' },
+      { id: 'x_rua', label: 'ATRAVESSAR A RUA', icon: '🚦' }
+    ]
+  },
+  {
+    name: 'INDO À FEIRA', icon: '🍎', scene: 'park',
+    goal: 'VAMOS COMPRAR FRUTAS NA FEIRA COM UM ADULTO!',
+    steps: [
+      { id: 'lista', label: 'FAZER A LISTA DE COMPRAS', icon: '📝' },
+      { id: 'sacola', label: 'PEGAR A SACOLA', icon: '🛍️' },
+      { id: 'ir', label: 'IR À FEIRA COM UM ADULTO', icon: '🚶' },
+      { id: 'escolher', label: 'ESCOLHER AS FRUTAS', icon: '🍎' },
+      { id: 'pagar', label: 'PAGAR', icon: '💰' },
+      { id: 'voltar', label: 'VOLTAR PARA CASA', icon: '🏠' }
+    ],
+    rules: [['lista', 'ir'], ['sacola', 'ir'], ['ir', 'escolher'], ['escolher', 'pagar'], ['pagar', 'voltar']],
+    extra: [
+      { id: 'x_deitar', label: 'DEITAR NA CAMA', icon: '🛏️' },
+      { id: 'x_dentes', label: 'ESCOVAR OS DENTES', icon: '🪥' }
+    ]
+  },
+  {
+    name: 'DANDO BANHO NO CACHORRO', icon: '🐕', scene: 'garden',
+    goal: 'O CACHORRINHO ESTÁ SUJO DE LAMA! HORA DO BANHO.',
+    steps: [
+      { id: 'bacia', label: 'ENCHER A BACIA DE ÁGUA', icon: '🪣' },
+      { id: 'colocar', label: 'COLOCAR O CACHORRO NA BACIA', icon: '🐕' },
+      { id: 'molhar', label: 'MOLHAR O PELO', icon: '💧' },
+      { id: 'xampu', label: 'PASSAR XAMPU', icon: '🧴' },
+      { id: 'enxaguar', label: 'ENXAGUAR', icon: '💦' },
+      { id: 'secar', label: 'SECAR O PELO', icon: '🌬️' }
+    ],
+    rules: 'chain',
+    extra: [
+      { id: 'x_desenho', label: 'FAZER UM DESENHO', icon: '🎨' },
+      { id: 'x_bike', label: 'ANDAR DE BICICLETA', icon: '🚲' }
+    ]
+  },
+  {
+    name: 'MONTANDO UM QUEBRA-CABEÇA', icon: '🧩', scene: 'bedroom',
+    goal: 'VAMOS MONTAR UM QUEBRA-CABEÇA SEM PERDER NENHUMA PEÇA!',
+    steps: [
+      { id: 'abrir', label: 'ABRIR A CAIXA', icon: '📦' },
+      { id: 'espalhar', label: 'ESPALHAR AS PEÇAS NA MESA', icon: '🧩' },
+      { id: 'cantos', label: 'ACHAR AS PEÇAS DOS CANTOS', icon: '🔍' },
+      { id: 'borda', label: 'MONTAR A BORDA', icon: '🖼️' },
+      { id: 'meio', label: 'COMPLETAR O MEIO', icon: '✨' },
+      { id: 'guardar', label: 'GUARDAR NA CAIXA', icon: '🗃️' }
+    ],
+    rules: 'chain',
+    extra: [
+      { id: 'x_horta', label: 'REGAR A HORTA', icon: '🌱' },
+      { id: 'x_cafe', label: 'TOMAR CAFÉ', icon: '🥣' }
+    ]
+  },
+  {
+    name: 'HORA DO RECREIO', icon: '🔔', scene: 'school',
+    goal: 'O SINAL VAI TOCAR! APROVEITE O RECREIO COM O BIPO.',
+    steps: [
+      { id: 'sinal', label: 'OUVIR O SINAL TOCAR', icon: '🔔' },
+      { id: 'maos', label: 'LAVAR AS MÃOS', icon: '🧼' },
+      { id: 'lanche', label: 'COMER O LANCHE', icon: '🍎' },
+      { id: 'brincar', label: 'BRINCAR COM OS AMIGOS', icon: '⚽' },
+      { id: 'agua', label: 'BEBER ÁGUA', icon: '💧' },
+      { id: 'voltar', label: 'VOLTAR PARA A SALA', icon: '🏫' }
+    ],
+    rules: [['sinal', 'maos'], ['maos', 'lanche'], ['sinal', 'brincar'], ['sinal', 'agua'], ['lanche', 'voltar'], ['brincar', 'voltar'], ['agua', 'voltar']],
+    extra: [
+      { id: 'x_pijama', label: 'VESTIR O PIJAMA', icon: '🩳' },
+      { id: 'x_cama', label: 'ARRUMAR A CAMA', icon: '🛏️' }
+    ]
+  },
+  {
+    name: 'FESTA JUNINA', icon: '🌽', scene: 'party',
+    goal: 'ARRAIÁ DO BIPO! PREPARE A FESTA JUNINA.',
+    steps: [
+      { id: 'bandeirinhas', label: 'PENDURAR AS BANDEIRINHAS', icon: '🎏' },
+      { id: 'comidas', label: 'ARRUMAR AS COMIDAS TÍPICAS', icon: '🌽' },
+      { id: 'roupa', label: 'VESTIR A ROUPA CAIPIRA', icon: '👒' },
+      { id: 'receber', label: 'RECEBER OS AMIGOS', icon: '👋' },
+      { id: 'quadrilha', label: 'DANÇAR A QUADRILHA', icon: '💃' },
+      { id: 'pescaria', label: 'BRINCAR NA PESCARIA', icon: '🎣' }
+    ],
+    rules: [['bandeirinhas', 'receber'], ['comidas', 'receber'], ['roupa', 'receber'], ['receber', 'quadrilha'], ['receber', 'pescaria']],
+    extra: [
+      { id: 'x_escola', label: 'IR PARA A ESCOLA', icon: '🏫' },
+      { id: 'x_regador', label: 'GUARDAR O REGADOR', icon: '🪣' }
+    ]
+  },
+  {
+    name: 'ARRUMANDO A MALA', icon: '🧳', scene: 'bedroom',
+    goal: 'É DIA DE VIAGEM! AJUDE O BIPO A ARRUMAR A MALA.',
+    steps: [
+      { id: 'abrir', label: 'ABRIR A MALA', icon: '🧳' },
+      { id: 'escolher', label: 'ESCOLHER AS ROUPAS', icon: '🤔' },
+      { id: 'dobrar', label: 'DOBRAR AS ROUPAS', icon: '👕' },
+      { id: 'colocar', label: 'COLOCAR AS ROUPAS NA MALA', icon: '📥' },
+      { id: 'escova', label: 'GUARDAR A ESCOVA DE DENTES', icon: '🪥' },
+      { id: 'fechar', label: 'FECHAR A MALA', icon: '🔒' }
+    ],
+    rules: [['escolher', 'dobrar'], ['dobrar', 'colocar'], ['abrir', 'colocar'], ['abrir', 'escova'], ['colocar', 'fechar'], ['escova', 'fechar']],
+    extra: [
+      { id: 'x_jantar', label: 'JANTAR', icon: '🍲' },
+      { id: 'x_pipa', label: 'SOLTAR PIPA', icon: '🪁' },
+      { id: 'x_plantas', label: 'REGAR AS PLANTAS', icon: '🌱' }
+    ]
+  },
+  {
+    name: 'NOITE DE HISTÓRIAS', icon: '📚', scene: 'night',
+    goal: 'ANTES DE DORMIR, O BIPO QUER OUVIR UMA HISTÓRIA!',
+    steps: [
+      { id: 'jantar', label: 'JANTAR', icon: '🍲' },
+      { id: 'banho', label: 'TOMAR BANHO', icon: '🚿' },
+      { id: 'pijama', label: 'VESTIR O PIJAMA', icon: '🩳' },
+      { id: 'dentes', label: 'ESCOVAR OS DENTES', icon: '🪥' },
+      { id: 'livro', label: 'ESCOLHER UM LIVRO', icon: '📚' },
+      { id: 'historia', label: 'OUVIR A HISTÓRIA', icon: '📖' },
+      { id: 'boanoite', label: 'DAR BOA NOITE', icon: '🌙' },
+      { id: 'dormir', label: 'DORMIR', icon: '😴' }
+    ],
+    rules: [['jantar', 'dentes'], ['banho', 'pijama'], ['pijama', 'historia'], ['dentes', 'historia'], ['livro', 'historia'], ['historia', 'boanoite'], ['boanoite', 'dormir']],
+    extra: [
+      { id: 'x_escola', label: 'IR PARA A ESCOLA', icon: '🏫' },
+      { id: 'x_cafe', label: 'TOMAR CAFÉ DA MANHÃ', icon: '🥣' },
+      { id: 'x_pipa', label: 'SOLTAR PIPA', icon: '🪁' }
+    ]
+  },
+  {
+    name: 'UM SÁBADO DIVERTIDO', icon: '🏆', scene: 'park',
+    goal: 'DESAFIO FINAL: PROGRAME O SÁBADO INTEIRO DO BIPO!',
+    steps: [
+      { id: 'acordar', label: 'ACORDAR', icon: '⏰' },
+      { id: 'cama', label: 'ARRUMAR A CAMA', icon: '🛏️' },
+      { id: 'cafe', label: 'TOMAR CAFÉ', icon: '🥣' },
+      { id: 'dentes', label: 'ESCOVAR OS DENTES', icon: '🪥' },
+      { id: 'protetor', label: 'PASSAR PROTETOR SOLAR', icon: '🧴' },
+      { id: 'parque', label: 'IR AO PARQUE COM A FAMÍLIA', icon: '🌳' },
+      { id: 'brincar', label: 'BRINCAR NO PARQUINHO', icon: '🤸' },
+      { id: 'lanchar', label: 'LANCHAR', icon: '🍎' },
+      { id: 'voltar', label: 'VOLTAR PARA CASA', icon: '🏠' },
+      { id: 'banho', label: 'TOMAR BANHO', icon: '🚿' },
+      { id: 'jantar', label: 'JANTAR', icon: '🍲' },
+      { id: 'dormir', label: 'DORMIR', icon: '😴' }
+    ],
+    rules: [
+      ['acordar', 'cama'], ['acordar', 'cafe'], ['acordar', 'dentes'], ['acordar', 'protetor'],
+      ['cama', 'parque'], ['cafe', 'parque'], ['dentes', 'parque'], ['protetor', 'parque'],
+      ['parque', 'brincar'], ['parque', 'lanchar'], ['brincar', 'voltar'], ['lanchar', 'voltar'],
+      ['voltar', 'banho'], ['voltar', 'jantar'], ['banho', 'dormir'], ['jantar', 'dormir']
+    ],
+    extra: [
+      { id: 'x_escola', label: 'IR PARA A ESCOLA', icon: '🏫' },
+      { id: 'x_lua', label: 'VOAR ATÉ A LUA', icon: '🚀' }
+    ]
   }
 ];
