@@ -1,7 +1,7 @@
 // Guarda os arquivos do jogo para funcionar sem internet depois do primeiro acesso.
-const CACHE = 'missao-em-ordem-v2';
+const CACHE = 'missao-em-ordem-v4';
 const FILES = [
-  './', 'index.html', 'css/style.css', 'js/levels.js', 'js/art.js', 'js/game.js',
+  './', 'index.html', 'css/style.css?v=4', 'js/levels.js?v=4', 'js/art.js?v=4', 'js/game.js?v=4',
   'fonts/Fredoka.ttf', 'icon.svg', 'manifest.webmanifest'
 ];
 
@@ -17,10 +17,13 @@ self.addEventListener('activate', (e) => {
 });
 
 // Rede primeiro (para pegar atualizações); sem internet, usa o que está guardado.
+// "no-cache" faz o navegador conferir no servidor se o arquivo mudou, para nunca
+// misturar uma página nova com um arquivo de programação antigo.
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
+  const req = e.request.mode === 'navigate' ? e.request : new Request(e.request, { cache: 'no-cache' });
   e.respondWith(
-    fetch(e.request)
+    fetch(req)
       .then((res) => {
         const copy = res.clone();
         caches.open(CACHE).then((c) => c.put(e.request, copy));

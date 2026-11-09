@@ -15,7 +15,9 @@ Errou? O jogo mostra o bloco que precisa ser revisto e dá uma dica. É só reor
 
 ## O que tem no jogo
 
-- **20 fases** com dificuldade crescente (da rotina da manhã até "Minha rotina completa").
+- **40 fases** com dificuldade crescente:
+  - **fases 1 a 20:** da rotina da manhã até "Minha rotina completa";
+  - **fases 21 a 40 (novas missões):** atravessar a rua, suco de laranja, lavar a louça, piquenique, bolo, dia de chuva, feira, festa junina, arrumar a mala e o desafio final "Um sábado divertido". Têm mais passos e até 3 blocos intrusos.
 - **Blocos de quebra-cabeça** com saliência e encaixe, que se ajustam sozinhos (snap) quando chegam perto da conexão.
 - Blocos **COMEÇAR** (verde), **ações** (azul, amarelo, laranja, rosa) e **FIM** (roxo).
 - A partir da fase 6 aparecem **blocos intrusos**, que não fazem parte da missão.
@@ -37,7 +39,7 @@ Errou? O jogo mostra o bloco que precisa ser revisto e dá uma dica. É só reor
 ```
 index.html          telas do jogo
 css/style.css       visual
-js/levels.js        dados das 20 fases (ações, regras de ordem, blocos intrusos)
+js/levels.js        dados das 40 fases (ações, regras de ordem, blocos intrusos)
 js/art.js           ilustrações em SVG (robô, cenários, formato dos blocos)
 js/game.js          motor do jogo: arrastar e soltar, execução, validação, estrelas
 sw.js               funcionamento offline
@@ -45,6 +47,8 @@ fonts/Fredoka.ttf   fonte arredondada (SIL Open Font License)
 ```
 
 Para criar ou mudar uma fase, edite apenas `js/levels.js`: um único sistema de jogo lê todas as fases.
+
+**Ao publicar uma mudança** em arquivos de `css/` ou `js/`, aumente o número `?v=` nos links do `index.html` e em `sw.js` (e o nome do `CACHE` em `sw.js`). Assim os navegadores baixam os arquivos novos em vez de usar os antigos guardados.
 
 ---
 
