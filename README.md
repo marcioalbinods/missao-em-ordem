@@ -79,3 +79,46 @@ Segundo jogo do repositório: **programação com setas** no estilo ScratchJr, p
 **Como abrir:** com o GitHub Pages ligado, acesse `.../star-wars/`. No computador, abra `star-wars/index.html` no navegador. É um arquivo único, sem instalação.
 
 > Projeto educativo, sem fins comerciais. Os personagens são desenhos simples feitos para o jogo.
+
+---
+
+# 🃏 Memória Galáctica (pasta `memoria-star-wars/`)
+
+Terceiro jogo do repositório: um **jogo da memória** com personagens inspirados em guerra nas estrelas, pensado para um aluno do **5º ano da educação especial**.
+
+**Como jogar**
+
+1. Escolha o nível: **Padawan (fácil)**, **Cavaleiro Jedi (médio)** ou **Mestre Jedi (difícil)**.
+2. Escolha uma fase (cada nível tem **8 fases**, com nomes de planetas).
+3. No começo, as cartas aparecem viradas para cima: olhe onde está cada personagem.
+4. Depois elas se escondem. Toque em duas cartas e encontre os pares iguais.
+
+**Níveis e fases (24 fases no total)**
+
+| Nível | Pares por fase | Tempo para memorizar | Cartas erradas ficam abertas | Dicas |
+|---|---|---|---|---|
+| 🟢 Padawan (fácil) | 2, 2, 3, 3, 4, 4, 5, 6 | o aluno decide (botão **Estou pronto**) | 2,6 s | à vontade |
+| 🟡 Cavaleiro Jedi (médio) | 4, 5, 6, 6, 7, 8, 8, 9 | 6 segundos | 1,8 s | 3 por fase |
+| 🔴 Mestre Jedi (difícil) | 6, 7, 8, 9, 10, 10, 11, 12 | 3 segundos | 1,2 s | 1 por fase |
+
+**Personagens (12):** Yoda, Darth Vader, R2-D2, C-3PO, Luke, Leia, Chewbacca, Soldado, BB-8, Han Solo, Obi-Wan e Grogu. No nível fácil eles entram sempre na mesma ordem (as primeiras fases usam só Yoda e Darth Vader); nos outros níveis são sorteados.
+
+**Recursos de acessibilidade**
+
+- Cartas grandes que se ajustam ao tamanho da tela (computador, tablet e celular). Só toque, não precisa arrastar.
+- Cada personagem tem **desenho, nome escrito e cor de moldura própria**: o par pode ser reconhecido pela imagem, pela palavra ou pela cor.
+- **Voz em português** fala o nome de cada carta virada e as instruções (botão 🔊 liga/desliga).
+- **Sem tempo para jogar e sem perder vidas.** Errar não tira nada: as cartas só voltam a se esconder.
+- Mensagens sempre positivas; contador de pares com bolinhas verdes para ver o progresso.
+- Botão **💡 Dica**: faz brilhar o par da carta aberta (ou um par qualquer).
+- Estrelas: 3 ⭐ com poucas tentativas, 2 ⭐ ou 1 ⭐ nos outros casos (sempre ganha pelo menos 1).
+- Funciona com teclado (Tab e Enter) e respeita a opção do sistema de "reduzir movimento".
+- **Área do professor** (protegida por uma conta de multiplicação):
+  - liberar todas as fases (ou voltar a abrir uma por vez);
+  - **tempo para memorizar**: normal, em dobro ou sem limite (com o botão *Estou pronto*), para os níveis médio e difícil;
+  - **reduzir animações** (para alunos que se incomodam com movimento);
+  - zerar o progresso.
+
+**Como abrir:** com o GitHub Pages ligado, acesse `.../memoria-star-wars/`. No computador, abra `memoria-star-wars/index.html` no navegador. É um arquivo único, sem instalação.
+
+> Projeto educativo, sem fins comerciais. Os personagens são desenhos simples feitos para o jogo.
