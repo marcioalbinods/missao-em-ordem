@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <title>Detetives Digitais – O Mistério dos 7 Erros</title>
+  <meta name="description" content="Jogo dos 7 erros com tema de tecnologia para o 2º ano do Ensino Fundamental (Educação Digital).">
+  <meta name="theme-color" content="#5b4bdb">
+  <link rel="icon" href="img/icone.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/estilo.css?v=1">
+</head>
+<body>
+
+  <!-- botões de som (sempre visíveis) -->
+  <div class="sons" id="sons">
+    <button class="btn-redondo" id="btn-efeitos" aria-label="Ligar ou desligar os efeitos sonoros" title="Efeitos sonoros">🔊</button>
+    <button class="btn-redondo" id="btn-musica" aria-label="Ligar ou desligar a música" title="Música">🎵</button>
+  </div>
+
+  <!-- ================= TELA INICIAL ================= -->
+  <section class="tela ativa" id="tela-inicio">
+    <div class="fundo-tech" aria-hidden="true"></div>
+    <div class="inicio-conteudo">
+      <div class="logo">
+        <div class="logo-lupa" aria-hidden="true">🔍</div>
+        <h1><span class="l1">DETETIVES</span> <span class="l2">DIGITAIS</span></h1>
+        <p class="logo-sub">O MISTÉRIO DOS <b>7</b> ERROS</p>
+      </div>
+      <div class="inicio-meio">
+        <div class="mascote mascote-grande" id="mascote-inicio"></div>
+        <div class="balao balao-inicio" id="balao-inicio">Olá, detetive! Eu sou o <b>Bit</b>, o robô detetive. Vamos investigar juntos?</div>
+      </div>
+      <div class="menu-botoes">
+        <button class="btn btn-verde btn-grande" id="btn-jogar">▶ JOGAR</button>
+        <button class="btn btn-azul" id="btn-como">❓ COMO JOGAR</button>
+        <button class="btn btn-laranja" id="btn-fases">🗺️ SELECIONAR FASE</button>
+        <button class="btn btn-roxo escondido" id="btn-certificado">🏆 MEU CERTIFICADO</button>
+      </div>
+      <div class="progresso-geral" id="progresso-geral">
+        <div class="barra"><div class="barra-cheia" id="barra-geral"></div></div>
+        <div class="progresso-texto" id="texto-geral">0 de 30 fases • 0 ⭐</div>
+      </div>
+    </div>
+    <button class="link-professor" id="link-professor" aria-label="Área do professor">⚙ professor</button>
+  </section>
+
+  <!-- ================= COMO JOGAR ================= -->
+  <section class="tela" id="tela-como">
+    <div class="fundo-tech" aria-hidden="true"></div>
+    <div class="painel painel-como">
+      <h2>❓ Como jogar</h2>
+      <div class="passos">
+        <div class="passo"><div class="passo-ico">🖼️🖼️</div><p><b>1.</b> Olhe as duas imagens: a <b>ORIGINAL</b> e a do <b>DESAFIO</b>.</p></div>
+        <div class="passo"><div class="passo-ico">👆</div><p><b>2.</b> Achou algo diferente? <b>Toque</b> ou <b>clique</b> bem em cima da diferença, em qualquer uma das imagens.</p></div>
+        <div class="passo"><div class="passo-ico">⭕</div><p><b>3.</b> Acertou? Aparece um <b>círculo colorido</b>. Encontre as <b>7 diferenças</b>!</p></div>
+        <div class="passo"><div class="passo-ico">💡</div><p><b>4.</b> Ficou difícil? Peça uma <b>dica</b> ao Bit. Mas atenção: sem dicas você ganha mais estrelas!</p></div>
+      </div>
+      <div class="estrelas-explica">
+        <div><span>⭐⭐⭐</span> sem dicas</div>
+        <div><span>⭐⭐</span> com 1 ou 2 dicas</div>
+        <div><span>⭐</span> com 3 dicas</div>
+      </div>
+      <button class="btn btn-verde btn-grande" data-ir="inicio">👍 ENTENDI!</button>
+    </div>
+  </section>
+
+  <!-- ================= SELEÇÃO DE FASES ================= -->
+  <section class="tela" id="tela-fases">
+    <div class="fundo-tech" aria-hidden="true"></div>
+    <header class="topo-fases">
+      <button class="btn btn-pequeno btn-azul" data-ir="inicio">🏠 MENU</button>
+      <h2>🗺️ Escolha a fase</h2>
+      <div class="estrelas-total" id="estrelas-total">0 ⭐</div>
+    </header>
+    <div class="lista-fases" id="lista-fases"></div>
+  </section>
+
+  <!-- ================= JOGO ================= -->
+  <section class="tela" id="tela-jogo">
+    <header class="topo-jogo">
+      <div class="fase-info">
+        <div class="fase-num" id="fase-num">1</div>
+        <div class="fase-textos">
+          <div class="fase-nome" id="fase-nome">Nome da fase</div>
+          <div class="fase-nivel" id="fase-nivel">Nível 1 – Detetives Iniciantes</div>
+        </div>
+      </div>
+      <div class="contador">
+        <div class="lupas" id="lupas"></div>
+        <div class="contador-texto"><b id="achadas">0</b>/7 <span class="so-largo">diferenças encontradas</span></div>
+        <div class="cronometro escondido" id="cronometro">⏱ 00:00</div>
+      </div>
+    </header>
+
+    <main class="area-imagens" id="area-imagens">
+      <div class="imagens" id="imagens">
+        <div class="quadro" data-lado="o">
+          <img alt="Imagem original" id="img-o" draggable="false">
+          <div class="camada" id="camada-o"></div>
+          <div class="etiqueta etiqueta-o">ORIGINAL</div>
+        </div>
+        <div class="quadro" data-lado="d">
+          <img alt="Imagem com diferenças" id="img-d" draggable="false">
+          <div class="camada" id="camada-d"></div>
+          <div class="etiqueta etiqueta-d">🔍 DESAFIO</div>
+        </div>
+      </div>
+      <div class="aviso-calma escondido" id="aviso-calma">🔍 Calma, detetive!<br><small>Compare as duas imagens com atenção.</small></div>
+    </main>
+
+    <footer class="rodape-jogo">
+      <div class="ajudante">
+        <div class="mascote mascote-pequeno" id="mascote-jogo"></div>
+        <div class="balao balao-jogo" id="balao-jogo">
+          <span id="fala">Vamos investigar!</span>
+          <button class="btn-ouvir" id="btn-ouvir" aria-label="Ouvir a mensagem" title="Ouvir">🔈</button>
+        </div>
+      </div>
+      <div class="acoes">
+        <button class="btn btn-amarelo" id="btn-dica">💡 DICA <span class="dicas-restantes" id="dicas-restantes">3</span></button>
+        <button class="btn btn-azul" id="btn-reiniciar">↺ <span class="so-largo">REINICIAR</span></button>
+        <button class="btn btn-laranja escondido" id="btn-pular">⏭ <span class="so-largo">PULAR</span></button>
+        <button class="btn btn-roxo" id="btn-menu">🏠 <span class="so-largo">MENU</span></button>
+      </div>
+    </footer>
+  </section>
+
+  <!-- ================= TELA FINAL ================= -->
+  <section class="tela" id="tela-final">
+    <div class="fundo-tech fundo-festa" aria-hidden="true"></div>
+    <div class="final-conteudo">
+      <h1 class="titulo-final">PARABÉNS,<br>SUPERDETETIVE DIGITAL!</h1>
+      <div class="certificado" id="certificado">
+        <div class="cert-borda">
+          <div class="cert-topo">🏅 CERTIFICADO 🏅</div>
+          <p class="cert-txt">Certificamos que</p>
+          <input class="cert-nome" id="cert-nome" maxlength="40" placeholder="toque aqui e escreva seu nome" aria-label="Seu nome">
+          <p class="cert-txt">desvendou os <b>30 mistérios</b> do jogo<br><b>DETETIVES DIGITAIS – O MISTÉRIO DOS 7 ERROS</b><br>e encontrou <b>210 diferenças</b>!</p>
+          <div class="cert-estrelas" id="cert-estrelas">⭐ 0 de 90 estrelas</div>
+          <div class="cert-rodape">
+            <div class="mascote mascote-cert" id="mascote-cert"></div>
+            <div><div class="cert-data" id="cert-data"></div><div class="cert-ass">Bit, o Robô Detetive</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="final-botoes">
+        <button class="btn btn-verde" id="btn-imprimir">🖨️ IMPRIMIR</button>
+        <button class="btn btn-azul" data-ir="inicio">🏠 MENU</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= JANELAS (modais) ================= -->
+  <div class="modal escondido" id="modal-intro" role="dialog" aria-modal="true">
+    <div class="caixa caixa-intro">
+      <div class="mascote mascote-medio" id="mascote-intro"></div>
+      <div class="intro-nivel" id="intro-nivel">NÍVEL 1</div>
+      <h2 id="intro-titulo">Fase 1</h2>
+      <p id="intro-texto">Texto</p>
+      <button class="btn btn-verde btn-grande" id="btn-comecar">🔍 COMEÇAR!</button>
+    </div>
+  </div>
+
+  <div class="modal escondido" id="modal-vitoria" role="dialog" aria-modal="true">
+    <div class="caixa caixa-vitoria">
+      <div class="vitoria-estrelas" id="vitoria-estrelas"><span>★</span><span>★</span><span>★</span></div>
+      <h2 id="vitoria-titulo">Mistério resolvido!</h2>
+      <div class="mascote mascote-medio" id="mascote-vitoria"></div>
+      <p id="vitoria-texto">Você encontrou as 7 diferenças!</p>
+      <div class="vitoria-botoes">
+        <button class="btn btn-verde btn-grande" id="btn-proxima">PRÓXIMA FASE ▶</button>
+        <button class="btn btn-azul" id="btn-vitoria-menu">🏠 MENU</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal escondido" id="modal-senha" role="dialog" aria-modal="true">
+    <div class="caixa caixa-senha">
+      <h2 id="senha-titulo">👩‍🏫 Área do professor</h2>
+      <p id="senha-dica">Digite a senha:</p>
+      <div class="senha-visor" id="senha-visor"></div>
+      <div class="teclado-num" id="teclado-num"></div>
+      <p class="senha-erro escondido" id="senha-erro">Senha incorreta. Tente de novo.</p>
+      <button class="btn btn-pequeno btn-cinza" id="btn-senha-cancelar">Cancelar</button>
+    </div>
+  </div>
+
+  <div class="modal escondido" id="modal-professor" role="dialog" aria-modal="true">
+    <div class="caixa caixa-professor">
+      <header class="prof-topo">
+        <h2>👩‍🏫 Área do professor</h2>
+        <button class="btn btn-pequeno btn-azul" id="btn-prof-fechar">✖ Fechar</button>
+      </header>
+      <div class="prof-resumo" id="prof-resumo"></div>
+      <div class="prof-grade">
+        <div class="prof-bloco">
+          <h3>Configurações deste dispositivo</h3>
+          <label class="chave"><input type="checkbox" data-config="efeitos"><span></span> Efeitos sonoros</label>
+          <label class="chave"><input type="checkbox" data-config="musica"><span></span> Música de fundo</label>
+          <label class="chave"><input type="checkbox" data-config="dicas"><span></span> Dicas ativadas</label>
+          <label class="chave"><input type="checkbox" data-config="cronometro"><span></span> Mostrar cronômetro</label>
+          <label class="chave"><input type="checkbox" data-config="pular"><span></span> Permitir pular fases</label>
+          <label class="chave"><input type="checkbox" data-config="liberar"><span></span> Liberar todas as fases</label>
+        </div>
+        <div class="prof-bloco">
+          <h3>Turma</h3>
+          <p class="prof-ajuda">O progresso fica salvo neste navegador. Para começar com outra turma, reinicie o progresso.</p>
+          <button class="btn btn-vermelho" id="btn-zerar">🗑 Reiniciar todo o progresso</button>
+          <button class="btn btn-cinza" id="btn-trocar-senha">🔑 Alterar senha</button>
+        </div>
+      </div>
+      <h3>As 30 fases</h3>
+      <div class="prof-fases" id="prof-fases"></div>
+    </div>
+  </div>
+
+  <div class="modal escondido" id="modal-gabarito" role="dialog" aria-modal="true">
+    <div class="caixa caixa-gabarito">
+      <header class="prof-topo">
+        <h2 id="gab-titulo">Gabarito</h2>
+        <button class="btn btn-pequeno btn-azul" id="btn-gab-fechar">✖ Fechar</button>
+      </header>
+      <div class="gab-corpo">
+        <div class="quadro quadro-gab"><img id="gab-img" alt="Imagem do desafio com as diferenças marcadas"><div class="camada" id="gab-camada"></div></div>
+        <ol class="gab-lista" id="gab-lista"></ol>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal escondido" id="modal-confirma" role="dialog" aria-modal="true">
+    <div class="caixa caixa-confirma">
+      <p id="confirma-texto">Tem certeza?</p>
+      <div class="vitoria-botoes">
+        <button class="btn btn-vermelho" id="btn-confirma-sim">Sim</button>
+        <button class="btn btn-cinza" id="btn-confirma-nao">Não</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="confete" id="confete" aria-hidden="true"></div>
+
+  <script src="js/fases.js?v=1"></script>
+  <script src="js/som.js?v=1"></script>
+  <script src="js/jogo.js?v=1"></script>
+</body>
+</html>
