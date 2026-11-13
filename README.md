@@ -122,3 +122,11 @@ Terceiro jogo do repositório: um **jogo da memória** com personagens inspirado
 **Como abrir:** com o GitHub Pages ligado, acesse `.../memoria-star-wars/`. No computador, abra `memoria-star-wars/index.html` no navegador. É um arquivo único, sem instalação.
 
 > Projeto educativo, sem fins comerciais. Os personagens são desenhos simples feitos para o jogo.
+
+---
+
+# 🔍 Detetives Digitais – O Mistério dos 7 Erros (pasta `detetives-digitais/`)
+
+Jogo dos 7 erros com tema de tecnologia para o **2º ano** (Educação Digital). Tem **30 fases** em 3 níveis, 60 imagens com diferenças validadas pixel a pixel, dicas do robô detetive Bit, estrelas, certificado final e área do professor (senha padrão `1234`).
+
+**Como abrir:** com o GitHub Pages ligado, acesse `.../detetives-digitais/`. Detalhes em [`detetives-digitais/README.md`](detetives-digitais/README.md).
